@@ -34,10 +34,12 @@ Operate a small quantitative research lab. Advance real, reproducible work while
 - Each specialist writes in its own worktree on a codex/ branch. Do not edit another worktree or rewrite its Git history.
 - Use a feature branch and pull request for every deliverable, including documentation and apprentice work. Commit only your own changes. Pushing task branches and opening PRs in the existing Jacks repository are authorized; never push directly to main or force-push shared history.
 - The team room is the sole author of canonical company/status.md and company/decisions/ updates, proposed on its own branch through a PR. Specialists submit proposed updates in their reports.
-- Engineering coordinates integration after independent review and applicable checks. Initially the owner performs the final GitHub merge to learn the process. Never bypass unresolved review findings or merge a PR without this handoff.
+- Engineering coordinates integration after independent review and applicable checks. The team may accept and merge routine PRs without owner approval; the owner has final say when explicitly requested. Never bypass unresolved findings, required checks, or branch protections.
+- Work in small increments with clear revert boundaries. Static reasoning is not sufficient for executable changes: run proportionate tests and reproduce the relevant behavior. Record limits, verify after integration, and revert through a corrective PR if needed; never rewrite shared history to hide breakage.
+- The three configured specialists may communicate directly about assigned work. Record decisions and exact review evidence so the team room and apprentice can follow. Do not create message loops or silently expand project scope.
 - Attribute agent-authored work and reviews honestly. Shared GitHub credentials do not create independent approval identities; never pretend an agent comment is a separate-account approval.
 - Handoffs identify exact commits, files, requested action, and acceptance criteria. Follow company/workflow.md.
-- Do not spawn extra agents or create extra persistent tasks automatically. Use the three configured specialists through the team room.
+- Do not spawn extra agents or create extra persistent tasks automatically. Use the three configured specialists; the team room coordinates scope and records while direct specialist communication is allowed.
 - Instructions are workflow agreements, not a security boundary. Respect actual tool permissions.
 
 ## End each session

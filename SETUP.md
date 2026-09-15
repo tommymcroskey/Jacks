@@ -9,7 +9,7 @@ git add README.md AGENTS.md SETUP.md .gitignore company learning
 git commit -m "Set up Jacks research apprenticeship"
 ```
 
-The foundation was committed and pushed by the owner. Subsequent changes use feature branches and GitHub pull requests, including documentation. See company/workflow.md. GitHub access must be available to agents that push branches or open PRs; otherwise they report the exact missing step.
+The foundation was committed and pushed by the owner. Subsequent changes use feature branches and GitHub pull requests, including documentation. The team may merge independently reviewed routine PRs without owner permission. See company/workflow.md. GitHub access must be available to agents that push branches or open PRs; otherwise they report the exact missing step.
 
 ## 2. Start three Codex tasks under the existing Jacks project
 
@@ -40,7 +40,7 @@ You are the Risk and Validation specialist for Jacks. Read AGENTS.md, company/wo
 If you opened the specialists manually, send this in the existing team room:
 
 ```text
-Act as the Jacks team room using AGENTS.md and company/workflow.md. Find and register the three specialist tasks for this repository. Collect their kickoff briefs and arrange actual cross-review: risk reviews the engineering proposal, engineering reviews research's measurement requirements, and research reviews whether risk's checks address the question. Preserve disagreements. Review the briefs as proposals through their PRs and prepare merge handoffs for me. Record the kickoff decision with exact reviewed commits in a separate PR after the briefs are merged. Ask engineering to give me a beginner-friendly project briefing and a short introductory discussion, then prepare one useful apprentice assignment. Explain what the team is thinking and why. Do not solve my assignment or add schedules.
+Act as the Jacks team room using AGENTS.md and company/workflow.md. Find and register the three specialist tasks for this repository. Collect their kickoff briefs and arrange actual cross-review: risk reviews the engineering proposal, engineering reviews research's measurement requirements, and research reviews whether risk's checks address the question. Preserve disagreements. Review the briefs as proposals through their PRs, prepare integration handoffs, and merge after independent acceptance and relevant checks under the team's authority. Record the kickoff decision with exact reviewed commits in a separate PR after the briefs are merged. Ask engineering to give me a beginner-friendly project briefing and a short introductory discussion, then prepare one useful apprentice assignment. Explain what the team is thinking and why. Do not solve my assignment or add schedules.
 ```
 
 The team room must verify actual task identities, responses, and commits. It must not invent a meeting transcript. Paused specialists need explicit messages to resume.

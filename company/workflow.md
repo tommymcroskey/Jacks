@@ -2,7 +2,7 @@
 
 ## Authority
 
-Research proposes investigations; risk and validation defines evidence standards and may block promotion with specific reasons; engineering owns system correctness and feasibility. The team resolves routine technical choices from evidence. Present material unresolved disagreements to the owner with options and consequences, not an unexplained demand for technical arbitration.
+Research proposes investigations; risk and validation defines evidence standards and may block promotion with specific reasons; engineering owns system correctness and feasibility. The specialists resolve routine technical choices together from evidence, including direct communication within assigned work. If evidence is insufficient, keep the disputed change blocked, design a smaller discriminating check, or choose the conservative reversible option; do not make the beginner arbitrate a technical dispute. The owner has final say when explicitly requested.
 
 The owner controls scope, spending, external commitments, and eventual deployment. They are not required to invent the research agenda. All three specialists help train them; engineering coordinates assignments.
 
@@ -27,10 +27,14 @@ Keep one project and one apprentice assignment active. Additional specialist wor
 3. Produce a focused commit, push the feature branch to origin, and open a PR against main. Use the PR template. For unfinished proposals, open a draft PR. Handoff: task ID, PR URL, source branch, full commit hash, artifact paths, claim, checks, requested reviewer, and blockers. Do not publish credentials or raw datasets.
 4. The team room delivers this handoff to a different specialist. Local worktrees share Git objects, not uncommitted files. Review the exact PR head; use the reviewer's own workspace for executable checks without overwriting unfinished work.
 5. The reviewer records performed checks, findings, and disposition against the exact commit. Record the review in a committed review artifact linked from the PR, or an explicitly attributed PR review/comment. Resolve correctness findings and rerun affected checks before acceptance. New changes require reconsidering affected review conclusions.
-6. Engineering explains readiness, integration order, and conflicts. Initially the owner performs the final GitHub merge after review and applicable checks. A merge command succeeding is not evidence the result is correct. The team room proposes status/decision updates through a separate PR; no direct-main shortcut.
+6. Engineering coordinates readiness, integration order, and conflicts. An authorized specialist or team-room integrator may merge after independent review of the current change and applicable checks, without waiting for owner approval. The owner can explicitly reserve a decision. A merge command succeeding is not evidence the result is correct. The team room proposes status/decision updates through a separate PR; no direct-main shortcut.
 7. Fetch origin and update main safely after merge, preserving unfinished work. Specialists explicitly bring the resulting main commit into their own branches before dependent work. Use fresh branches for new deliverables after merging; do not reuse a completed PR branch indefinitely.
 
 The apprentice follows the same cycle with mentoring: understand ticket -> create branch -> implement -> commit -> push -> open PR -> respond to review -> merge when accepted. The mentor explains each operation before the apprentice's first use and does not perform their contribution or PR interactions silently.
+
+Keep changes small enough to review and revert independently. Executable changes need relevant runtime checks as well as static inspection. State what remains unverified; do not interpret permission to merge as permission to declare unchecked work correct. Verify the integrated result. If a regression appears, pause dependent work and submit a focused fix or revert PR, preserving history. Do not force-push shared branches or bypass branch protections.
+
+Normal project GitHub pushes, PR creation, attributed review comments, and reviewed merges to tommymcroskey/Jacks are authorized. Tool permissions still apply. No trading, purchases, credentials changes, or unrelated external commitments follow from this authority. Ask the owner only for a genuinely missing preference or expansion beyond the mandate, or when the owner explicitly requests final say.
 
 ## GitHub identity and enforcement
 
