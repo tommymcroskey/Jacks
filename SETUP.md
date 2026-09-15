@@ -9,7 +9,7 @@ git add README.md AGENTS.md SETUP.md .gitignore company learning
 git commit -m "Set up Jacks research apprenticeship"
 ```
 
-The foundation was committed and pushed by the owner. Subsequent changes use feature branches and GitHub pull requests, including documentation. See company/workflow.md. GitHub access must be available to agents that push branches or open PRs; otherwise they report the exact missing step.
+The foundation was committed and pushed by the owner. Subsequent changes use feature branches and GitHub pull requests, including documentation. The team may merge independently reviewed routine PRs without owner permission. See company/workflow.md. GitHub access must be available to agents that push branches or open PRs; otherwise they report the exact missing step.
 
 ## 2. Start three Codex tasks under the existing Jacks project
 

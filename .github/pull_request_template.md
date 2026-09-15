@@ -23,4 +23,4 @@ List checks actually performed and their results. Explain anything not checked.
 - [ ] Relevant checks pass.
 - [ ] Another specialist reviewed the current changes; findings are resolved.
 - [ ] Limitations and reproduction instructions are documented where relevant.
-- [ ] Owner has the handoff for the final merge.
+- [ ] Integration owner has a clear merge/revert plan; no unresolved blocking findings.
