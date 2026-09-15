@@ -1,0 +1,18 @@
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local builds and editor output
+build/
+out/
+.vs/
+.venv/
+__pycache__/
+
+# Raw datasets and generated bulk output: track manifests/small fixtures separately
+data/raw/
+data/cache/
+artifacts/
