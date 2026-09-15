@@ -86,9 +86,12 @@ valuation implementation, or apprentice test solution were written.
 
 Team room owns PR transport and dispatch. Risk/research should review the exact
 head for contract consistency, explicit skipped status, dependency scope, and
-Tommy's ownership, then reproduce the guide's commands. Confirm L-001's explicit
-zero-mark rule against the earlier positive-only RES-002 proposal; do not infer
-acceptance of unresolved ledger choices. The signature has no ledger semantics.
+Tommy's ownership, then reproduce the guide's commands. The coordinator's merged
+decision at `0b47476b93697d3ec0d597866467aa4e9258fd84` records acceptance of L-001
+and research's withdrawal of its positive-only mark proposal. That commit is
+included in this branch. L-001 now points to the final shared paths and current
+build evidence; only harness/exact API review remains before implementation.
+Unresolved full-ledger choices are not implied by the valuation contract.
 
 Merge only after independent review. The historical note and scaffold are separate
 commits with independent corrective-PR/revert boundaries. A skipped component
