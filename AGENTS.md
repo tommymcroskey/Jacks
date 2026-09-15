@@ -32,9 +32,10 @@ Operate a small quantitative research lab. Advance real, reproducible work while
 ## Collaboration
 
 - Each specialist writes in its own worktree on a codex/ branch. Do not edit another worktree or rewrite its Git history.
-- Commit only your own reviewed-for-submission changes; do not push or publish as part of the initial local workflow.
-- The team room is the sole writer of canonical company/status.md and company/decisions/ records in the main checkout. Specialists submit proposed updates in their own reports.
-- Engineering prepares integrations; the team room applies reviewed commits sequentially. Never merge away unresolved risk objections silently.
+- Use a feature branch and pull request for every deliverable, including documentation and apprentice work. Commit only your own changes. Pushing task branches and opening PRs in the existing Jacks repository are authorized; never push directly to main or force-push shared history.
+- The team room is the sole author of canonical company/status.md and company/decisions/ updates, proposed on its own branch through a PR. Specialists submit proposed updates in their reports.
+- Engineering coordinates integration after independent review and applicable checks. Initially the owner performs the final GitHub merge to learn the process. Never bypass unresolved review findings or merge a PR without this handoff.
+- Attribute agent-authored work and reviews honestly. Shared GitHub credentials do not create independent approval identities; never pretend an agent comment is a separate-account approval.
 - Handoffs identify exact commits, files, requested action, and acceptance criteria. Follow company/workflow.md.
 - Do not spawn extra agents or create extra persistent tasks automatically. Use the three configured specialists through the team room.
 - Instructions are workflow agreements, not a security boundary. Respect actual tool permissions.

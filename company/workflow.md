@@ -20,15 +20,23 @@ Ready -> active -> review -> done. Blocked names the exact missing artifact and 
 
 Keep one project and one apprentice assignment active. Additional specialist work must be a bounded dependency of that project.
 
-## Worktree and integration protocol
+## Branch, pull-request, and integration protocol
 
 1. Start from the committed foundation on main. Check for local changes before Git operations; preserve unrelated work.
 2. Each specialist creates its own codex/ branch if starting detached. Never check out main in a specialist worktree.
-3. Produce a report and commit. Handoff: task ID, source branch, full commit hash, artifact paths, claim, checks, requested review, acceptance criteria, blockers.
-4. The team room delivers this handoff to the reviewer. Local worktrees share Git objects, but not uncommitted files. The reviewer can inspect the exact commit with git show. For executable checks, arrange the reviewed version on the reviewer's own branch without overwriting unfinished work.
-5. The reviewer creates a separate review artifact referencing the exact reviewed commit, including performed checks, findings, and disposition. Changed code needs reconsideration of affected approvals.
-6. Engineering proposes integration order and any conflict resolution. The team room integrates accepted commits sequentially in the clean main checkout, checks the integrated result, then updates canonical status. A merge command succeeding is not evidence the result is correct.
-7. Specialists explicitly bring the resulting main commit into their own branches before dependent work; never assume automatic synchronization. Cross-machine collaboration would additionally require pushing/fetching, which is outside initial setup.
+3. Produce a focused commit, push the feature branch to origin, and open a PR against main. Use the PR template. For unfinished proposals, open a draft PR. Handoff: task ID, PR URL, source branch, full commit hash, artifact paths, claim, checks, requested reviewer, and blockers. Do not publish credentials or raw datasets.
+4. The team room delivers this handoff to a different specialist. Local worktrees share Git objects, not uncommitted files. Review the exact PR head; use the reviewer's own workspace for executable checks without overwriting unfinished work.
+5. The reviewer records performed checks, findings, and disposition against the exact commit. Record the review in a committed review artifact linked from the PR, or an explicitly attributed PR review/comment. Resolve correctness findings and rerun affected checks before acceptance. New changes require reconsidering affected review conclusions.
+6. Engineering explains readiness, integration order, and conflicts. Initially the owner performs the final GitHub merge after review and applicable checks. A merge command succeeding is not evidence the result is correct. The team room proposes status/decision updates through a separate PR; no direct-main shortcut.
+7. Fetch origin and update main safely after merge, preserving unfinished work. Specialists explicitly bring the resulting main commit into their own branches before dependent work. Use fresh branches for new deliverables after merging; do not reuse a completed PR branch indefinitely.
+
+The apprentice follows the same cycle with mentoring: understand ticket -> create branch -> implement -> commit -> push -> open PR -> respond to review -> merge when accepted. The mentor explains each operation before the apprentice's first use and does not perform their contribution or PR interactions silently.
+
+## GitHub identity and enforcement
+
+Agents currently use the owner's available credentials. They are functional reviewers, not separate GitHub accounts. GitHub does not count an author's self-approval as another person's approval. Label reviews with the actual agent role and reviewed commit, and disclose agent-authored contributions. Do not fabricate human authorship or activity.
+
+These rules are initially a documented process, not configured branch protection. When repository settings and independent review identities permit, configure a main-branch ruleset requiring PRs and applicable status checks. Do not require unavailable external approvals and then bypass the requirement. Add real build/test CI once the project has runnable code; documentation-only kickoff work needs proportionate checks.
 
 Initial kickoff briefs can be integrated as proposals, not as accepted findings. Record their disposition explicitly.
 
