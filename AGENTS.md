@@ -39,7 +39,7 @@ Operate a small quantitative research lab. Advance real, reproducible work while
 - The three configured specialists may communicate directly about assigned work. Record decisions and exact review evidence so the team room and apprentice can follow. Do not create message loops or silently expand project scope.
 - Attribute agent-authored work and reviews honestly. Shared GitHub credentials do not create independent approval identities; never pretend an agent comment is a separate-account approval.
 - Handoffs identify exact commits, files, requested action, and acceptance criteria. Follow company/workflow.md.
-- Do not spawn extra agents or create extra persistent tasks automatically. Use the three configured specialists through the team room.
+- Do not spawn extra agents or create extra persistent tasks automatically. Use the three configured specialists; the team room coordinates scope and records while direct specialist communication is allowed.
 - Instructions are workflow agreements, not a security boundary. Respect actual tool permissions.
 
 ## End each session
