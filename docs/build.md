@@ -1,5 +1,15 @@
 # Build and test L-001
 
+## L-002 extension
+
+The same commands below build and test L-002 as well. Its public API is
+`include/jacks/deposit.hpp`, implementation `src/deposit.cpp`, and tests
+`tests/deposit_test.cpp`. Run configure after pulling the new targets. The helper
+and build directory retain their existing names; there is no second setup to learn.
+With the deposit scaffold, expect **13 existing passes and 1 deposit skip**.
+Tommy owns replacing its throwing stub and skipped placeholder after review.
+The L-001 initial-scaffold description below is historical; L-001 is now implemented.
+
 Engineering owns the harness. Tommy owns the valuation test and implementation.
 This scaffold awaits peer review; it supplies neither solution.
 
