@@ -1,32 +1,71 @@
 # Jacks status
 
-## Current state
+Updated 2026-09-16 by the team room. This is a work snapshot, not evidence of
+continuous background operation. The existing tasks run bounded assignments;
+no recurring scheduler is configured.
 
-Foundation and PR workflow saved on GitHub; PR #1 merged at 669f159. After the computer restart, Git integrity and a clean main checkout were verified. Three specialist tasks were created and dispatched for bounded kickoff briefs. PRs #2-#8 are merged: policy, kickoff briefs, and actual cross-review records. L-001 valuation scope is agreed; its harness is in preparation in engineering's isolated worktree. No valuation implementation, empirical findings, scheduled work, or apprentice code submission is accepted. Task states below are a registration snapshot; query the actual tasks for current progress.
+## Accepted work
+
+L-001 is complete. Tommy's snapshot valuation implementation, tests and explanation
+were accepted by engineering and independently by risk, then merged through
+[PR #12](https://github.com/tommymcroskey/Jacks/pull/12) at
+`00bbc1bdc5865e9470eee5e9bfc1259101093e34`.
+The engineering review history was accepted by risk and merged through
+[PR #13](https://github.com/tommymcroskey/Jacks/pull/13) at
+`c7edcf52963380a46b6675942df0337bddb95899`.
+
+Reviewed submission: `a8ea2c190d76af63006304131e0bba2338ce2d8e`.
+Engineering and risk each reproduced 13/13 submitted tests; risk additionally
+rebuilt 15/15 independent probes against this exact submission. The coordinator
+built and ran 13/13 tests on integrated `c7edcf5` in its isolated worktree.
+See company/reviews/ENG-005-L001-PR12.md and the attributed review/integration
+comments on PR #12. Checks cover MSVC x64 Debug and bounded valuation behavior,
+not full-ledger correctness, empirical alpha, or trading readiness. GitHub CI
+is not yet configured. Earlier pending-harness prose is historical, not a gate.
 
 ## Team directory
 
-| Function | Actual Codex task ID | State |
+| Function | Actual Codex task ID | Current bounded responsibility |
 | --- | --- | --- |
-| Team room | 01a0a692-cdb4-7f20-9fde-95544eaed3a1 | Coordinating kickoff |
-| Senior Engineer | 01a0a6b7-0c65-7b43-a5e1-d8f0f80cf941 | Preparing reviewed L-001 harness |
-| Quant Researcher | 01a0a6b7-14f7-79e2-9dee-48bddb4a650f | Available for peer review |
-| Risk and Validation | 01a0a6b7-2083-7d30-aeda-b8e02f781461 | Available for validation |
+| Team room | 01a0a692-cdb4-7f20-9fde-95544eaed3a1 | Scope, status, peer-review handoffs and integration |
+| Senior Engineer | 01a0a6b7-0c65-7b43-a5e1-d8f0f80cf941 | Prepare one L-002 assignment and exact interface/harness |
+| Quant Researcher | 01a0a6b7-14f7-79e2-9dee-48bddb4a650f | Independent funding/value accounting examples for L-002 |
+| Risk and Validation | 01a0a6b7-2083-7d30-aeda-b8e02f781461 | Deposit-only scope, rejection/boundary requirements and peer review |
 
-All specialists run on host local in separate Codex-managed worktrees. The task IDs were checked with the app's task-status tool. A temporary approval-service capacity failure affected research's Git setup; its normal-permission retry succeeded and the task confirmed its branch and intact brief.
+All three existing specialists use host local and their own worktrees. They may
+coordinate directly within this scope. No new tasks or agents are required.
 
-## Project P001: explain portfolio value
+## P001 next increment: L-002 preparation
 
-See company/projects/P001.md. Status: kickoff proposals reviewed and merged; see company/decisions/P001-kickoff.md for the accepted valuation boundary and remaining ledger gates.
+Risk selected one deposit transition as the smallest useful next increment.
+Engineering and research agree on external-flow accounting, atomic rejection,
+and checking profit in independent fixtures rather than adding a profit subsystem.
+L-001 supplies the existing valuation function; do not duplicate it.
 
-| Work | Owner | Deliverable | State | Dependency |
-| --- | --- | --- | --- | --- |
-| ENG-001 | Engineer | company/briefs/ENG-001.md | Done | Accepted as proposal and merged |
-| RES-001 | Researcher | company/briefs/RES-001.md | Done | Accepted as proposal and merged |
-| RISK-001 | Risk | company/briefs/RISK-001.md | Done | Accepted as proposal and merged |
-| Kickoff review | Team room + specialists | company/decisions/P001-kickoff.md | Done | Actual cross-review recorded |
-| Apprentice assignment L-001 | Engineer prepares; apprentice owns submission | learning/assignments/L-001.md | Preparing | Valuation scenario accepted; reviewed harness still required |
+Tommy owns the deposit transition and its focused tests after interface/harness
+review. Engineering owns the assignment and supporting scaffold. Research and risk
+supply independent expectations and challenge the proposed contract. Preparation
+can proceed concurrently; dependent ledger integration waits for Tommy's accepted
+contribution. There is one apprentice assignment, not three separate workloads.
 
-## Next owner action
+Planned requirements, subject to exact interface review:
+- Positive deposit amount; preserve holdings and mark.
+- Checked cash, net external-flow counter and resulting equity.
+- Positive increasing event sequence; a rejected event consumes no sequence.
+- Rejection leaves all prior state unchanged.
+- Explicit initialization and error precedence.
+- Fixed opening equity and net flows initially zero; deposit changes equity and
+  net external flows equally, leaving explained profit unchanged.
 
-No additional tasks need to be created. Continue in the existing team room. The coordinator collects actual brief results, arranges cross-review, and reports blockers; the apprentice does not need to carry messages between tasks. Tommy has completed the opening discussion and proposed his first missing-mark test. Engineering owns harness setup; Tommy writes his test and function after that prerequisite is reviewed.
+Withdrawals, trades, fees, mark updates, a general event framework and a profit
+API are deferred. No full-ledger implementation is authorized by this increment.
+No L-002 code or tests are claimed complete.
+
+## Apprentice handoff
+
+L-001 needs no further revisions. L-002's first action is a short proposed
+input/expected-result case and approach during engineering's briefing.
+Implementation waits for the reviewed exact interface and harness. Tommy need
+not invent the business direction or transfer messages between specialists.
+Keep his existing checkout and scratch files intact; start the new contribution
+on a fresh branch when the assignment is ready.
