@@ -95,3 +95,27 @@ TEST(Valuation, CalculateEquityAlmostOverflow) {
 	ASSERT_NO_THROW(assume_valuation_equity(res, eq));
 	ASSERT_EQ(eq.minor_units, INT64_MAX);
 }
+
+// Cash: 100; Quantity: 0; Mark: std::nullopt;
+// Should return ValuationResult evaluating to Equity->100
+TEST(Valuation, CalculateEquityOnlyCash) {
+	std::int64_t cash_minor_units{100};
+	std::int64_t quantity_units{0};
+	std::optional<std::int64_t> mark_minor_units{std::nullopt};
+	auto res = jacks::calculate_equity(cash_minor_units, quantity_units, mark_minor_units);
+	jacks::Equity eq{};
+	ASSERT_NO_THROW(assume_valuation_equity(res, eq));
+	ASSERT_EQ(eq.minor_units, 100);
+}
+
+// Cash: -1; Quantity: 1; Mark: std::nullopt;
+// Should return ValuationResult evaluating to ErrorCode::invalid_input
+TEST(Valuation, CalculateEquityInvalidCacheMissingMark) {
+	std::int64_t cash_minor_units{-1};
+	std::int64_t quantity_units{1};
+	std::optional<std::int64_t> mark_minor_units{std::nullopt};
+	auto res = jacks::calculate_equity(cash_minor_units, quantity_units, mark_minor_units);
+	jacks::ErrorCode err;
+	ASSERT_NO_THROW(assume_valuation_err(res, err));
+	ASSERT_EQ(err, jacks::ErrorCode::invalid_input);
+}
