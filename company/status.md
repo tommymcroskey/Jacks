@@ -69,4 +69,3 @@ Implementation waits for the reviewed exact interface and harness. Tommy need
 not invent the business direction or transfer messages between specialists.
 Keep his existing checkout and scratch files intact; start the new contribution
 on a fresh branch when the assignment is ready.
-
