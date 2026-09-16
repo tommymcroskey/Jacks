@@ -10,7 +10,7 @@ TEST(Valuation, CalculateEquityMissingMark) {
 	ASSERT_TRUE(std::holds_alternative<jacks::ErrorCode>(res));
 	ASSERT_EQ(std::get<jacks::ErrorCode>(res), jacks::ErrorCode::missing_mark);
 }
- 
+
 // Cash: -1000; Quantity: 50; Mark: 40;
 // Should return ValuationResult evaluating to ErrorCode::invalid_input
 TEST(Valuation, CalculateEquityInvalidCash) {
@@ -81,4 +81,20 @@ TEST(Valuation, CalculateEquityMultiplicationOverflow) {
 	const auto res = jacks::calculate_equity(1, INT64_MAX / 2, 3);
 	ASSERT_TRUE(std::holds_alternative<jacks::ErrorCode>(res));
 	ASSERT_EQ(std::get<jacks::ErrorCode>(res), jacks::ErrorCode::overflow);
+}
+
+// Cash: 46000; Quantity: 36; Mark: 0;
+// Should return ValuationResult evaluating to Equity->46000
+TEST(Valuation, CalculateEquityPresentZeroMark) {
+	const auto res = jacks::calculate_equity(46000, 36, 0);
+	ASSERT_TRUE(std::holds_alternative<jacks::Equity>(res));
+	ASSERT_EQ(std::get<jacks::Equity>(res).minor_units, 46000);
+}
+
+// Cash: 12; Quantity: 0; Mark: -50
+// Should return ValuationResult evaluating to ErrorCode::invalid_input
+TEST(Valuation, CalculateEquityZeroQuantityNegativeMark) {
+	const auto res = jacks::calculate_equity(12, 0, -50);
+	ASSERT_TRUE(std::holds_alternative<jacks::ErrorCode>(res));
+	ASSERT_EQ(std::get<jacks::ErrorCode>(res), jacks::ErrorCode::invalid_input);
 }
