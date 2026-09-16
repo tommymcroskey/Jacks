@@ -55,7 +55,7 @@ TEST(Valuation, CalculateEquityValidCalculation) {
 	std::optional<std::int64_t> mark_minor_units{24};
 	jacks::Equity expected{3400};
 	auto res = jacks::calculate_equity(cash_minor_units, quantity_units, mark_minor_units);
-	jacks::Equity eq;
+	jacks::Equity eq{};
 	EXPECT_NO_THROW(assume_valuation_equity(res, eq));
 	EXPECT_EQ(eq.minor_units, expected.minor_units);
 }
