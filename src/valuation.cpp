@@ -1,7 +1,5 @@
 #include "jacks/valuation.hpp"
 
-#include <stdexcept>
-
 namespace jacks {
 
 ValuationResult calculate_equity(
@@ -9,9 +7,10 @@ ValuationResult calculate_equity(
     std::int64_t quantity_units,
     std::optional<std::int64_t> mark_minor_units) {
 	ValuationResult res;
-	if (mark_minor_units == std::nullopt) {
+
+	if (mark_minor_units == std::nullopt && quantity_units != 0) {
 		res = ErrorCode::missing_mark;
-	} else if (cash_minor_units < 0 || quantity_units < 0) {
+	} else if (cash_minor_units < 0 || quantity_units < 0 || (*mark_minor_units) < 0) {
 		res = ErrorCode::invalid_input;
 	} else if (*mark_minor_units == 0) {
 		res = Equity{cash_minor_units};
@@ -20,6 +19,7 @@ ValuationResult calculate_equity(
 	} else {
 		res = Equity{quantity_units * (*mark_minor_units) + cash_minor_units};
 	}
+
 	return res;
 }
 
