@@ -316,6 +316,11 @@ TEST(Deposit, DepositValid) {
 
 	const auto res = jacks::apply_deposit(current, deposit);
 	ASSERT_TRUE(std::holds_alternative<jacks::DepositApplied>(res));
-	ASSERT_EQ(std::get<jacks::DepositApplied>(res).equity.minor_units, 78500);
-	ASSERT_EQ(std::get<jacks::DepositApplied>(res).state.cash_minor_units, 18500);
+	const auto dp = std::get<jacks::DepositApplied>(res);
+	ASSERT_EQ(dp.equity.minor_units, 78500);
+	ASSERT_EQ(dp.state.cash_minor_units, 18500);
+	ASSERT_EQ(dp.state.net_deposits_minor_units, 18300);
+	ASSERT_EQ(dp.state.last_sequence, 2);
+	ASSERT_EQ(dp.state.quantity_units, 6);
+	ASSERT_EQ(*dp.state.mark_minor_units, 10000);
 }
