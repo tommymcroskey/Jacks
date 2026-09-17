@@ -74,7 +74,8 @@ TEST(Deposit, DepositNegativeNetDeposits) {
 	const jacks::Deposit deposit{18, 55};
 
 	const auto res = jacks::apply_deposit(current, deposit);
-	GTEST_SKIP();
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositError>(res));
+	ASSERT_EQ(std::get<jacks::DepositError>(res), jacks::DepositError::invalid_state);
 }
 
 // valid equity_calculation result, negative sequence in state -> invalid_state
@@ -89,7 +90,8 @@ TEST(Deposit, DepositNegativeStateSequence) {
 	const jacks::Deposit deposit{320, 166};
 
 	const auto res = jacks::apply_deposit(current, deposit);
-	GTEST_SKIP();
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositError>(res));
+	ASSERT_EQ(std::get<jacks::DepositError>(res), jacks::DepositError::invalid_state);
 }
 
 // valid state, zero deposit amount -> invalid_amount
@@ -104,7 +106,8 @@ TEST(Deposit, DepositValidStateZeroDeposit) {
 	const jacks::Deposit deposit{0, 2};
 
 	const auto res = jacks::apply_deposit(current, deposit);
-	GTEST_SKIP();
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositError>(res));
+	ASSERT_EQ(std::get<jacks::DepositError>(res), jacks::DepositError::invalid_amount);
 }
 
 // valid state, negative deposit amount -> invalid_amount
@@ -119,7 +122,8 @@ TEST(Deposit, DepositValidStateNegativeDeposit) {
 	const jacks::Deposit deposit{-22, 111};
 
 	const auto res = jacks::apply_deposit(current, deposit);
-	GTEST_SKIP();
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositError>(res));
+	ASSERT_EQ(std::get<jacks::DepositError>(res), jacks::DepositError::invalid_amount);
 }
 
 // valid state, negative deposit sequence -> invalid_sequence
@@ -134,7 +138,8 @@ TEST(Deposit, DepositValidStateNegativeDepositSequence) {
 	const jacks::Deposit deposit{8800, -200000};
 
 	const auto res = jacks::apply_deposit(current, deposit);
-	GTEST_SKIP();
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositError>(res));
+	ASSERT_EQ(std::get<jacks::DepositError>(res), jacks::DepositError::invalid_sequence);
 }
 
 // valid state, deposit sequence less than last sequence -> invalid_sequence
@@ -149,7 +154,8 @@ TEST(Deposit, DepositValidStateLTDepositSequence) {
 	const jacks::Deposit deposit{1000000, 25};
 
 	const auto res = jacks::apply_deposit(current, deposit);
-	GTEST_SKIP();
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositError>(res));
+	ASSERT_EQ(std::get<jacks::DepositError>(res), jacks::DepositError::invalid_sequence);
 }
 
 // valid state, deposit sequence equal to last sequence -> invalid_sequence
@@ -164,7 +170,8 @@ TEST(Deposit, DepositValidStateEqualDepositSequence) {
 	const jacks::Deposit deposit{10000, 18};
 
 	const auto res = jacks::apply_deposit(current, deposit);
-	GTEST_SKIP();
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositError>(res));
+	ASSERT_EQ(std::get<jacks::DepositError>(res), jacks::DepositError::invalid_sequence);
 }
 
 // valid state and deposit, cash overflow -> overflow
@@ -179,7 +186,24 @@ TEST(Deposit, DepositCashOverflow) {
 	const jacks::Deposit deposit{INT64_MAX, 100};
 
 	const auto res = jacks::apply_deposit(current, deposit);
-	GTEST_SKIP();
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositError>(res));
+	ASSERT_EQ(std::get<jacks::DepositError>(res), jacks::DepositError::overflow);
+}
+
+// valid state and deposit, net deposits overflow -> overflow
+TEST(Deposit, DepositNetDepositsOverflow) {
+	const jacks::DepositState current{
+		/* cash_minor_units */		   245,
+		/* quantity_units */		   2,
+		/* mark_minor_units */		   1199,
+		/* net_deposits_minor_units */ 306,
+		/* last_sequence */ 		   12
+	};
+	const jacks::Deposit deposit{INT64_MAX - 245, 13};
+
+	const auto res = jacks::apply_deposit(current, deposit);
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositError>(res));
+	ASSERT_EQ(std::get<jacks::DepositError>(res), jacks::DepositError::overflow);
 }
 
 // valid state and deposit, resulting equity overflow -> overflow
@@ -194,7 +218,8 @@ TEST(Deposit, DepositEquityOverflow) {
 	const jacks::Deposit deposit{88, 166};
 
 	const auto res = jacks::apply_deposit(current, deposit);
-	GTEST_SKIP();
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositError>(res));
+	ASSERT_EQ(std::get<jacks::DepositError>(res), jacks::DepositError::overflow);
 }
 
 // ERROR PRECEDENCE TESTS
@@ -213,7 +238,8 @@ TEST(Deposit, DepositInvalidStateInvalidAmount) {
 	const jacks::Deposit deposit{-1, 444};
 
 	const auto res = jacks::apply_deposit(current, deposit);
-	GTEST_SKIP();
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositError>(res));
+	ASSERT_EQ(std::get<jacks::DepositError>(res), jacks::DepositError::invalid_state);
 }
 
 TEST(Deposit, DepositInvalidStateInvalidSequence) {
@@ -227,7 +253,8 @@ TEST(Deposit, DepositInvalidStateInvalidSequence) {
 	const jacks::Deposit deposit{1000, 9};
 
 	const auto res = jacks::apply_deposit(current, deposit);
-	GTEST_SKIP();
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositError>(res));
+	ASSERT_EQ(std::get<jacks::DepositError>(res), jacks::DepositError::invalid_state);
 }
 
 TEST(Deposit, DepositInvalidStateOverflow) {
@@ -241,7 +268,8 @@ TEST(Deposit, DepositInvalidStateOverflow) {
 	const jacks::Deposit deposit{INT64_MAX - 5000, 166};
 
 	const auto res = jacks::apply_deposit(current, deposit);
-	GTEST_SKIP();
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositError>(res));
+	ASSERT_EQ(std::get<jacks::DepositError>(res), jacks::DepositError::invalid_state);
 }
 
 TEST(Deposit, DepositInvalidAmountInvalidSequence) {
@@ -255,12 +283,8 @@ TEST(Deposit, DepositInvalidAmountInvalidSequence) {
 	const jacks::Deposit deposit{0, INT64_MIN};
 
 	const auto res = jacks::apply_deposit(current, deposit);
-	GTEST_SKIP();
-}
-
-// As far as I'm aware, this is impossible
-TEST(Deposit, DepositInvalidAmountOverflow) {
-	GTEST_SKIP();
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositError>(res));
+	ASSERT_EQ(std::get<jacks::DepositError>(res), jacks::DepositError::invalid_amount);
 }
 
 TEST(Deposit, DepositInvalidSequenceOverflow) {

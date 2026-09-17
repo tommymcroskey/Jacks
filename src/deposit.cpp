@@ -28,7 +28,8 @@ DepositResult apply_deposit(
 	}
 
 	// additive overflow check
-	if (INT64_MAX - deposit.amount_minor_units < current.cash_minor_units) {
+	if (INT64_MAX - deposit.amount_minor_units < current.cash_minor_units
+		|| INT64_MAX - deposit.amount_minor_units < current.net_deposits_minor_units) {
 		return DepositError::overflow;
 	}
 
