@@ -292,7 +292,6 @@ TEST(Deposit, DepositValid) {
 
 	const auto res = jacks::apply_deposit(current, deposit);
 	ASSERT_TRUE(std::holds_alternative<jacks::DepositApplied>(res));
-	// Not sure what to do with this, could implement basic value comparison for operator== in state...
-	// ASSERT_EQ(std::get<jacks::DepositApplied>(res).state, expected_state);
-	// ASSERT_EQ(std::get<jacks::DepositApplied>(res).equity, expected_equity);
+	ASSERT_EQ(std::get<jacks::DepositApplied>(res).equity.minor_units, 78500);
+	ASSERT_EQ(std::get<jacks::DepositApplied>(res).state.cash_minor_units, 18500);
 }
