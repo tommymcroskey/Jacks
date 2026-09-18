@@ -1,7 +1,5 @@
 #include "jacks/profit.hpp"
 
-#include <stdexcept>
-
 namespace jacks {
 
 ProfitResult calculate_profit(
