@@ -295,7 +295,7 @@ TEST(Deposit, DepositInvalidSequenceOverflow) {
 		/* net_deposits_minor_units */ 18,
 		/* last_sequence */ 		   1
 	};
-	const jacks::Deposit deposit{INT_MAX, -1};
+	const jacks::Deposit deposit{INT64_MAX, -1};
 
 	const auto res = jacks::apply_deposit(current, deposit);
 	ASSERT_TRUE(std::holds_alternative<jacks::DepositError>(res));
