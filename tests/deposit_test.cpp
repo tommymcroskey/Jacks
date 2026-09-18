@@ -222,6 +222,30 @@ TEST(Deposit, DepositEquityOverflow) {
 	ASSERT_EQ(std::get<jacks::DepositError>(res), jacks::DepositError::overflow);
 }
 
+TEST(Deposit, DepositOverflowInputUnchanged) {
+	const jacks::DepositState current{
+		/* cash_minor_units */		   18000,
+		/* quantity_units */		   18,
+		/* mark_minor_units */		   100,
+		/* net_deposits_minor_units */ 66,
+		/* last_sequence */ 		   122
+	};
+	const jacks::Deposit deposit{INT64_MAX, 143};
+	const auto curr_cpy = current;
+	const auto depo_cpy = deposit;
+
+	const auto res = jacks::apply_deposit(current, deposit);
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositError>(res));
+	ASSERT_EQ(current.cash_minor_units, curr_cpy.cash_minor_units);
+	ASSERT_EQ(current.quantity_units, curr_cpy.quantity_units);
+	ASSERT_NE(current.mark_minor_units, std::nullopt);
+	ASSERT_EQ(*current.mark_minor_units, *curr_cpy.mark_minor_units);
+	ASSERT_EQ(current.net_deposits_minor_units, curr_cpy.net_deposits_minor_units);
+	ASSERT_EQ(current.last_sequence, curr_cpy.last_sequence);
+	ASSERT_EQ(deposit.amount_minor_units, depo_cpy.amount_minor_units);
+	ASSERT_EQ(deposit.sequence, depo_cpy.sequence);
+}
+
 // ERROR PRECEDENCE TESTS
 
 // order of precedence:
@@ -361,5 +385,9 @@ TEST(Deposit, DepositCashOnlyMaxDeposit) {
 	const jacks::Deposit deposit{INT64_MAX, 1};
 	const auto res = jacks::apply_deposit(current, deposit);
 	ASSERT_TRUE(std::holds_alternative<jacks::DepositApplied>(res));
-	ASSERT_EQ(std::get<jacks::DepositApplied>(res).state.cash_minor_units, INT64_MAX);
+	const auto dp = std::get<jacks::DepositApplied>(res);
+	ASSERT_EQ(dp.state.cash_minor_units, INT64_MAX);
+	ASSERT_EQ(dp.state.net_deposits_minor_units, INT64_MAX);
+	ASSERT_EQ(dp.state.last_sequence, 1);
+	ASSERT_EQ(dp.equity.minor_units, INT64_MAX);
 }
