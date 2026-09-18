@@ -21,8 +21,15 @@ Updated 2026-09-18. Snapshot of bounded assignments; no continuous scheduler.
 
 ## CI evidence
 
-CI integration is pending the final combined hosted run on PR #27.
-The earlier baseline passed 35 tests with one profit skip.
+[CI PR #27](https://github.com/tommymcroskey/Jacks/pull/27) merged at
+`e2432b28ce48f46256bc04dadcce3e244bd679b9` after unchanged-workflow risk
+acceptance and [combined hosted run 35389825948](https://github.com/tommymcroskey/Jacks/actions/runs/35389825948)
+passed **43 tests with one explicit profit skip**, zero failures.
+Source `e1b0f971ab2439141bbe3795e0043aef0983a4b4`; tested merge
+`027f4f11d21ed46e5672f966f268c807e684869a`; CMake/CTest 3.31.6,
+MSVC 19.44.35228 x64 Debug. Logs contain both research and both risk cases.
+Hosted results are coordinator-observed. The main-push check verifies actual
+integration separately. The earlier baseline passed 35 tests with one skip.
 Both deliberate hosted failure probes behaved as required in
 [run 35389324018](https://github.com/tommymcroskey/Jacks/actions/runs/35389324018):
 configure/build succeeded; intentional assertion and empty selection failed.
