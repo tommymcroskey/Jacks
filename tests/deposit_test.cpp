@@ -193,10 +193,10 @@ TEST(Deposit, DepositCashOverflow) {
 // valid state and deposit, net deposits overflow -> overflow
 TEST(Deposit, DepositNetDepositsOverflow) {
 	const jacks::DepositState current{
-		/* cash_minor_units */		   245,
-		/* quantity_units */		   2,
-		/* mark_minor_units */		   1199,
-		/* net_deposits_minor_units */ 306,
+		/* cash_minor_units */		   0,
+		/* quantity_units */		   0,
+		/* mark_minor_units */		   std::nullopt,
+		/* net_deposits_minor_units */ 246,
 		/* last_sequence */ 		   12
 	};
 	const jacks::Deposit deposit{INT64_MAX - 245, 13};
