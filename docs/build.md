@@ -89,3 +89,14 @@ pinned by full commit in CMake; GoogleMock and installation disabled. Its
 [CMake instructions](https://github.com/google/googletest/blob/f8d7d77c06936315286eb55f8de22cd23c188571/googletest/README.md)
 describe the integration. Only this Windows configuration was executed here.
 Record your actual commands and results with your submission.
+
+## L-003 scaffold
+
+After the reviewed L-003 handoff, the same `tools/l001.ps1` configure/build/test
+commands also cover `jacks_profit` and its separate `jacks_profit_tests` target.
+The historical helper name remains unchanged. Initially the profit test is an
+explicit skip and the function throws: neither counts as checked behavior.
+The accepted valuation/deposit baseline and future replay library do not depend
+on calling that placeholder. Tommy replaces the scaffold after the briefing.
+Engineering's scaffold verification: MSVC x64 Debug, 35 accepted tests passed
+and one profit placeholder skipped. Do not report this as 36 behavior passes.
