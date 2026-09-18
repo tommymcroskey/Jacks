@@ -16,3 +16,13 @@ implementation. Keep the accepted valuation/deposit tests passing.
 Add a brief explanation and actual commands/results as you work. Name the tested
 commit, or say that a run included uncommitted edits. Distinguish failed, passed,
 and skipped tests. No retrospective reconstruction or large log dump is required.
+
+Report:
+
+09/18/2026
+Finished project scope. Implements profit function with input and boundary checks as stated in spec. 
+Commands Run:
+cmake --build build/l001 --config Debug
+ctest --test-dir build/l001 -C Debug --output-on-failure
+Notes:
+Taking advantage of non negative input types allows boundary check to only acknowledge one side of the boundary. True INT64_MAX overflow is impossible with stated specs.
