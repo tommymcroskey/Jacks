@@ -322,5 +322,6 @@ TEST(Deposit, DepositValid) {
 	ASSERT_EQ(dp.state.net_deposits_minor_units, 18300);
 	ASSERT_EQ(dp.state.last_sequence, 2);
 	ASSERT_EQ(dp.state.quantity_units, 6);
+	ASSERT_NE(dp.state.mark_minor_units, std::nullopt);
 	ASSERT_EQ(*dp.state.mark_minor_units, 10000);
 }
