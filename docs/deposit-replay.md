@@ -1,7 +1,8 @@
 # Ordered deposit replay: first infrastructure increment
 
 Base: integrated L-002 at `8869447ae433a7badd80ee6b14cc65e6efde5e1c`.
-Status: proposed exact interface for research/risk review before implementation.
+Interface accepted by research/risk at `839df68`. Implementation and executable
+checks are reviewed separately; see the exact PR evidence for current acceptance.
 Declaration: `include/jacks/replay.hpp`.
 
 ## Contract
@@ -70,3 +71,13 @@ Acceptance includes the 35 existing passes, empty/invalid initialization,
 deterministic caller-order traces, first failure and untouched accepted prefix,
 unchanged inputs, independent economic rows, and a green integrated build/test
 run. Additional platforms/configurations are separate follow-up work.
+
+## Running the component checks
+
+Use `tools/l001.ps1 configure`, `build`, and `test` as in the build guide.
+`jacks_replay` links only the deposit/valuation libraries; `jacks_replay_tests`
+checks initialization, ordered records and rejection/prefix behavior. The baseline
+component run before research/risk integration had 39 passes (35 accepted tests
+plus four replay tests), MSVC x64 Debug. This does not claim independent scenario
+or hosted CI acceptance. Research and risk check their own expected rows against
+the exact implementation commit before integration.
