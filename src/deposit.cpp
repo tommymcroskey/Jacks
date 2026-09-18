@@ -33,7 +33,7 @@ DepositResult apply_deposit(
 		return DepositError::overflow;
 	}
 
-	DepositState newState{
+	DepositState new_state{
 		/* new cash_minor_units */ 		   current.cash_minor_units + deposit.amount_minor_units,
 		/* new quantity_units */ 		   current.quantity_units,
 		/* new mark_minor_units */ 		   current.mark_minor_units,
@@ -42,16 +42,16 @@ DepositResult apply_deposit(
 	};
 
 	const auto equity_res = calculate_equity(
-		newState.cash_minor_units,
-		newState.quantity_units,
-		newState.mark_minor_units
+		new_state.cash_minor_units,
+		new_state.quantity_units,
+		new_state.mark_minor_units
 	);
 
 	if (std::holds_alternative<ErrorCode>(equity_res)) {
 		return DepositError::overflow;
 	}
 
-	return DepositApplied{newState, std::get<Equity>(equity_res)};
+	return DepositApplied{new_state, std::get<Equity>(equity_res)};
 }
 
 } // namespace jacks
