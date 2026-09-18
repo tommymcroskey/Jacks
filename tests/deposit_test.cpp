@@ -325,3 +325,35 @@ TEST(Deposit, DepositValid) {
 	ASSERT_NE(dp.state.mark_minor_units, std::nullopt);
 	ASSERT_EQ(*dp.state.mark_minor_units, 10000);
 }
+
+TEST(Deposit, DepositValidInputUnchanged) {
+	const jacks::DepositState current{
+		/* cash_minor_units */		   6500,
+		/* quantity_units */		   6,
+		/* mark_minor_units */		   10000,
+		/* net_deposits_minor_units */ 6300,
+		/* last_sequence */ 		   1
+	};
+	const jacks::Deposit deposit{12000, 2};
+	const auto curr_cpy = current;
+	const auto depo_cpy = deposit;
+
+	const auto res = jacks::apply_deposit(current, deposit);
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositApplied>(res));
+	ASSERT_EQ(current, curr_cpy);
+	ASSERT_EQ(deposit, depo_cpy);
+}
+
+TEST(Deposit, DepositCashOnlyMaxDeposit) {
+	const jacks::DepositState current{
+		/* cash_minor_units */		   0,
+		/* quantity_units */		   0,
+		/* mark_minor_units */		   std::nullopt,
+		/* net_deposits_minor_units */ 0,
+		/* last_sequence */ 		   0
+	};
+	const jacks::Deposit deposit{INT64_MAX, 1};
+	const auto res = jacks::calculate_equity(current, deposit);
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositResult>(res));
+	ASSERT_EQ(std::get<jacks::DepositApplied>(res).state.cash_minor_units, INT64_MAX);
+}
