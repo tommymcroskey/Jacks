@@ -1,10 +1,2 @@
-# Engineering's root includes this directory inside BUILD_TESTING.
-add_executable(jacks_replay_economic_tests ../replay_economic_test.cpp)
-target_link_libraries(jacks_replay_economic_tests PRIVATE jacks_replay GTest::gtest_main)
-if(MSVC)
-  target_compile_options(jacks_replay_economic_tests PRIVATE /W4 /WX /permissive- /Zc:__cplusplus)
-else()
-  target_compile_options(jacks_replay_economic_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
-endif()
-include(GoogleTest)
-gtest_discover_tests(jacks_replay_economic_tests DISCOVERY_MODE PRE_TEST)
+jacks_add_tests(jacks_replay_economic_tests
+  SOURCES ../replay_economic_test.cpp LIBRARIES jacks_replay)
