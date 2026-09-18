@@ -2,12 +2,13 @@
 
 Author: Quant Researcher agent. Project: P001. Date: 2026-09-18.
 Base: `8869447ae433a7badd80ee6b14cc65e6efde5e1c`.
-Status: draft executable scenarios; runtime verification blocked on the replay
-implementation. Not ready for acceptance or integration as tested behavior.
+Status: local runtime verification complete; awaiting independent executable review.
 Exact header/contract dependency:
 `839df685f482a3597b3e8d83224c4e25f16a4d06` (`include/jacks/replay.hpp` and
 `docs/deposit-replay.md`). Research reviewed that new-run trace contract and found
-it consistent with the scenarios below; no implementation approval is implied.
+it consistent with the scenarios below. Runtime dependency is engineering's
+`976e5ec72647121a415026a5d6cdd3a55ce37282`; merged into this research branch as
+`b27f08bae82fb9012e1fa1646f75872968738bf2` before the additive root wiring below.
 
 ## Independent economic expectations
 
@@ -56,22 +57,46 @@ No mark changes, withdrawals, trades, parsing, persistence, or performance claim
 state/equity/index field with literals, expects no event failure, and checks input
 snapshot/vector preservation. It never invokes a reconciliation/profit helper.
 `tests/research/CMakeLists.txt` defines `jacks_replay_economic_tests`, linking
-engineering's `jacks_replay` and existing GoogleTest. Engineering owns the root
-`add_subdirectory(tests/research)` wiring inside `BUILD_TESTING`.
+engineering's `jacks_replay` and existing GoogleTest. With engineering's explicit
+handoff, research added the single root `add_subdirectory(tests/research)` line
+inside `BUILD_TESTING`; no replay or apprentice source was changed.
 
-Author checks performed: six documented equity/profit rows independently reconciled
-with direct PowerShell arithmetic; source inspected against the exact committed
-header above; staged whitespace check. No compile, link, CTest or runtime success
-is claimed. The dependency currently supplies only header/docs, not a runner.
-No substitute runner or apprentice implementation was introduced to make tests pass.
+## Reproduction and observed results
 
-After the reviewed runner/root wiring is available, configure and build the normal
-project, then run `ctest --test-dir build/l001 -C Debug -R ReplayEconomic
---output-on-failure --no-tests=error` (one command). Record the exact runner commit,
-commands, observed results, and a controlled wrong-expectation failure before
-claiming executable acceptance. Also retain the existing regression suite.
+From the repository root, using the installed PowerShell 7 runtime and existing
+VS2019/MSVC 19.29 x64 Debug toolchain:
 
-Next owner: engineering supplies the committed runner/wiring; research resumes
-runtime verification; risk independently reviews literals and executed evidence.
-Coordinator owns PR transport. This draft checkpoint is not completion of runtime
-acceptance; that explicit dependency is the blocker.
+```powershell
+$resPwsh = 'C:\Users\18589\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\pwsh.exe'
+& $resPwsh -NoProfile -File ./tools/l001.ps1 configure
+& $resPwsh -NoProfile -File ./tools/l001.ps1 build
+& $resPwsh -NoProfile -File ./tools/l001.ps1 test
+```
+
+Initial configure failed because the sandbox blocked the pinned GoogleTest clone.
+The authorized network retry succeeded without changing the dependency pin or
+machine settings. Configure, compile/link and the full CTest run then succeeded:
+**41 executed passes, 1 explicit Profit.ApprenticeImplementationPending skip**.
+That comprises 35 existing tests, 4 engineering replay tests, and 2 research tests
+(six replay invocations). The skip is not profit correctness evidence.
+
+Failure sensitivity: temporarily changed only scenario A's final expected equity
+from 13250 to 13251 in the research source. Rebuilt and ran the following with the
+installed CTest executable; one research case failed at accepted and final equity,
+the other passed, and CTest returned **8**:
+
+```text
+ctest --test-dir build/l001 -C Debug -R ReplayEconomic --output-on-failure --no-tests=error
+```
+
+Restored 13250, rebuilt and reran the complete suite: again **41 passes, 1 skip**.
+Git diff confirmed no residual scenario-source change from the draft. The probe
+was never committed. Six documented economic rows also passed independent direct
+PowerShell arithmetic; staged whitespace checks passed. The submitted code state
+is the merged dependency plus root wiring; this report is the only further change.
+
+These are local executable observations, not a hosted CI run, Release/platform
+coverage, a complete risk suite, or acceptance of the pending profit function.
+No substitute runner or profit implementation was used. Next owners: risk and
+engineering reproduce/review the exact submitted head; coordinator handles PR
+transport and dependency integration. No remaining local runtime blocker.
