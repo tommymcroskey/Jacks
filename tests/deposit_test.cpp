@@ -340,8 +340,14 @@ TEST(Deposit, DepositValidInputUnchanged) {
 
 	const auto res = jacks::apply_deposit(current, deposit);
 	ASSERT_TRUE(std::holds_alternative<jacks::DepositApplied>(res));
-	ASSERT_EQ(current, curr_cpy);
-	ASSERT_EQ(deposit, depo_cpy);
+	ASSERT_EQ(current.cash_minor_units, curr_cpy.cash_minor_units);
+	ASSERT_EQ(current.quantity_units, curr_cpy.quantity_units);
+	ASSERT_NE(current.mark_minor_units, std::nullopt);
+	ASSERT_EQ(*current.mark_minor_units, *curr_cpy.mark_minor_units);
+	ASSERT_EQ(current.net_deposits_minor_units, curr_cpy.net_deposits_minor_units);
+	ASSERT_EQ(current.last_sequence, curr_cpy.last_sequence);
+	ASSERT_EQ(deposit.amount_minor_units, depo_cpy.amount_minor_units);
+	ASSERT_EQ(deposit.sequence, depo_cpy.sequence);
 }
 
 TEST(Deposit, DepositCashOnlyMaxDeposit) {
@@ -353,7 +359,7 @@ TEST(Deposit, DepositCashOnlyMaxDeposit) {
 		/* last_sequence */ 		   0
 	};
 	const jacks::Deposit deposit{INT64_MAX, 1};
-	const auto res = jacks::calculate_equity(current, deposit);
-	ASSERT_TRUE(std::holds_alternative<jacks::DepositResult>(res));
+	const auto res = jacks::apply_deposit(current, deposit);
+	ASSERT_TRUE(std::holds_alternative<jacks::DepositApplied>(res));
 	ASSERT_EQ(std::get<jacks::DepositApplied>(res).state.cash_minor_units, INT64_MAX);
 }
