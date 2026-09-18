@@ -69,3 +69,21 @@ TEST(Profit, ProfitRealisticExample) {
 	ASSERT_TRUE(std::holds_alternative<jacks::Profit>(res));
 	ASSERT_EQ(std::get<jacks::Profit>(res).minor_units, 80148);
 }
+
+TEST(Profit, ProfitMaxLoss) {
+	jacks::Equity opening{INT64_MAX};
+	jacks::Equity current{0};
+	int64_t net_deposits_minor_units{1};
+	const auto res = jacks::calculate_profit(opening, current, net_deposits_minor_units);
+	ASSERT_TRUE(std::holds_alternative<jacks::Profit>(res));
+	ASSERT_EQ(std::get<jacks::Profit>(res).minor_units, INT64_MIN);
+}
+
+TEST(Profit, ProfitMaxGain) {
+	jacks::Equity opening{0};
+	jacks::Equity current{INT64_MAX};
+	int64_t net_deposits_minor_units{0};
+	const auto res = jacks::calculate_profit(opening, current, net_deposits_minor_units);
+	ASSERT_TRUE(std::holds_alternative<jacks::Profit>(res));
+	ASSERT_EQ(std::get<jacks::Profit>(res).minor_units, INT64_MAX);
+}
