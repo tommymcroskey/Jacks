@@ -30,6 +30,7 @@ if(BUILD_TESTING)
   add_executable(jacks_replay_tests tests/replay_test.cpp)
   target_link_libraries(jacks_replay_tests PRIVATE jacks_replay GTest::gtest_main)
   gtest_discover_tests(jacks_replay_tests DISCOVERY_MODE PRE_TEST)
+  add_subdirectory(tests/research)
   # Apprentice scaffold is separate from the accepted deposit/replay baseline.
   add_executable(jacks_profit_tests tests/profit_test.cpp)
   target_link_libraries(jacks_profit_tests PRIVATE jacks_profit GTest::gtest_main)
