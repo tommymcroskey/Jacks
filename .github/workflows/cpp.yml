@@ -1,4 +1,4 @@
-name: C++ checks
+name: Risk CI negative probes - DO NOT MERGE
 
 on:
   pull_request:
@@ -14,7 +14,11 @@ concurrency:
 
 jobs:
   windows-debug:
-    name: Windows Debug
+    name: Windows Debug (${{ matrix.probe }})
+    strategy:
+      fail-fast: false
+      matrix:
+        probe: [assertion-failure, empty-selection]
     runs-on: windows-2022
     timeout-minutes: 20
     defaults:
@@ -38,4 +42,8 @@ jobs:
       - name: Build
         run: cmake --build build/ci --config Debug --parallel 2
       - name: Test
+        if: matrix.probe == 'assertion-failure'
         run: ctest --test-dir build/ci -C Debug --output-on-failure --no-tests=error
+      - name: Empty selection must fail
+        if: matrix.probe == 'empty-selection'
+        run: ctest --test-dir build/ci -C Debug --output-on-failure --no-tests=error -R "^RiskNoSuchHostedProbe$"

@@ -29,6 +29,10 @@ if(BUILD_TESTING)
   add_executable(jacks_profit_tests tests/profit_test.cpp)
   target_link_libraries(jacks_profit_tests PRIVATE jacks_profit GTest::gtest_main)
   gtest_discover_tests(jacks_profit_tests DISCOVERY_MODE PRE_TEST)
+  # Throwaway reviewer CI probe. This branch must never merge.
+  add_executable(jacks_ci_negative_probe tests/risk_ci_negative_probe.cpp)
+  target_link_libraries(jacks_ci_negative_probe PRIVATE GTest::gtest_main)
+  gtest_discover_tests(jacks_ci_negative_probe DISCOVERY_MODE PRE_TEST)
 endif()
 # Apply warnings to our code, not the downloaded dependency.
 foreach(jacks_target jacks_valuation jacks_deposit jacks_profit jacks_tests jacks_profit_tests)
