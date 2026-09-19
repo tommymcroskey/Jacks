@@ -28,12 +28,6 @@ MarkResult apply_mark(
 		return MarkError::invalid_sequence;
 	}
 
-	if (mark_update.mark_minor_units
-		> ((INT64_MAX - state.cash_minor_units)
-		/ state.quantity_units)) {
-		return MarkError::overflow;
-	}
-
 	const DepositState new_state{
 		state.cash_minor_units,
 		state.quantity_units,
@@ -47,6 +41,10 @@ MarkResult apply_mark(
 		state.quantity_units,
 		mark_update.mark_minor_units
 	);
+
+	if (std::holds_alternative<ErrorCode>(equity)) {
+		return MarkError::overflow;
+	}
 
 	return MarkApplied{new_state, std::get<Equity>(equity)};
 }
