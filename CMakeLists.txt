@@ -26,6 +26,10 @@ add_library(jacks_mark STATIC src/mark.cpp)
 target_link_libraries(jacks_mark PUBLIC jacks_deposit)
 jacks_enable_warnings(jacks_mark)
 
+add_library(jacks_fill STATIC src/fill.cpp)
+target_link_libraries(jacks_fill PUBLIC jacks_deposit)
+jacks_enable_warnings(jacks_fill)
+
 add_executable(jacks_account_demo examples/account_demo.cpp)
 target_link_libraries(jacks_account_demo PRIVATE jacks_replay jacks_profit)
 jacks_enable_warnings(jacks_account_demo)
@@ -40,8 +44,9 @@ if(BUILD_TESTING)
   add_subdirectory(tests/research)
   add_subdirectory(tests/risk)
   jacks_add_tests(jacks_profit_tests SOURCES tests/profit_test.cpp LIBRARIES jacks_profit)
-  # Mark implementation remains apprentice-owned; its placeholder is an explicit skip.
   jacks_add_tests(jacks_mark_tests SOURCES tests/mark_test.cpp LIBRARIES jacks_mark)
+  # Fill implementation remains apprentice-owned; its placeholder is an explicit skip.
+  jacks_add_tests(jacks_fill_tests SOURCES tests/fill_test.cpp LIBRARIES jacks_fill)
   jacks_add_tests(jacks_replay_profit_tests
     SOURCES tests/replay_profit_test.cpp LIBRARIES jacks_replay jacks_profit)
   add_test(NAME AccountDemo.Runs COMMAND jacks_account_demo)
