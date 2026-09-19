@@ -1,80 +1,66 @@
 # Jacks status
 
-Updated 2026-09-18. Bounded assignments, not a continuously running service.
+Updated 2026-09-19. Exact PR evidence and current coordinator handoffs supersede
+older snapshots. Specialists run bounded assignments, not continuous background work.
 
-## Completed
+## Completed foundation
 
-- L-001 valuation (PR #12), L-002 deposits (PR #19), ordered deposit replay
-  (PR #26), independent research/risk checks (PRs #25/#28), and Windows CI
-  (PR #27) are integrated.
-- Tommy's L-003 checked profit implementation/tests shipped in
-  [PR #31](https://github.com/tommymcroskey/Jacks/pull/31) at
-  `65a2421f838702b7b328ca067609ff78e989f239`.
-  Engineering and risk independently accepted exact source
-  `ae93ef009200b231f64e4919dc594d80829c98a4`, each with 54 passes and zero skips.
-  Coordinator also configured/built/tested the merged commit: 54/54 pass,
-  zero skips/failures, MSVC 19.29 x64 Debug.
-- Hosted PR [run 35404333702](https://github.com/tommymcroskey/Jacks/actions/runs/35404333702)
-  passed 54/54 on tested merge `4dabc380001ba401f80f564d07f4c76627e82c52`;
-  actual-main push [run 35404479818](https://github.com/tommymcroskey/Jacks/actions/runs/35404479818)
-  also succeeded. Review details and probe limitations are attributed on PR #31.
-- Submission README [PR #32](https://github.com/tommymcroskey/Jacks/pull/32)
-  merged at `80639e57545541f2b1e4d22ceba5f9fdba36f46a` after engineering
-  acceptance and hosted 54/54. README whitespace/wording nits were nonblocking;
-  no extra apprentice revision is requested.
-- CI failure propagation was verified with deliberate assertion/empty-selection
-  probes, [run 35389324018](https://github.com/tommymcroskey/Jacks/actions/runs/35389324018).
-  Temporary PR #29 was closed unmerged. Shared credentials do not constitute
-  separate GitHub-account approvals.
+- Tommy: L-001 valuation (PR #12), L-002 deposits (PR #19), L-003 profit
+  (PR #31), and L-004 mark updates (PR #37).
+- L-004 integrated at `4a850fcfe0c984f2c343f8e2dba1558c405a86e8`.
+  Engineering and Risk independently accepted source
+  `cb2ad17c384b970168abf07a50d16db8396d1b3e`, each reproducing 79/79 tests,
+  zero skips/failures, MSVC 19.29 x64 Debug. Hosted PR CI passed; coordinator
+  configured/built/tested the actual merged commit with the same 79/79 result.
+- Senior deposit replay (PR #26), research/risk checks (#25/#28), Windows CI
+  (#27), account demo (#34), and CMake maintenance (#36) are integrated.
+  The demo currently connects valuation/deposits/profit; trading integration
+  is the next milestone, not a completed backtester.
+- Review and postintegration evidence is attributed on each PR. Shared GitHub
+  credentials do not create separate reviewer-account identities.
 
-## Current bounded work
+## Agreed direction
 
-Tommy asked to see the team's use of his work and to receive his next project.
+See [synthetic trading lifecycle](decisions/P001-synthetic-trading-lifecycle.md).
+All three specialists agree: one explicit synthetic buy/sell account history,
+then a historical study only after Research's data-semantics gate. Tommy
+delegated this direction decision to the seniors.
 
-| Owner | Deliverable |
+One apprentice contribution is reserved: L-005 supplied-fill accounting and
+focused tests. Engineering owns the reviewed exact header/assignment/scaffold.
+The ready handoff and merged scaffold PR establish when implementation starts.
+No additional apprentice assignment or senior replacement solution.
+
+| Owner | Bounded responsibility |
 | --- | --- |
-| Engineering | Small terminal demonstration reusing valuation, deposits, replay and L-003 profit; separate exact L-004 contract/header/harness |
-| Research | Independent literal economic expectations for demonstration and mark updates; no alternate implementation |
-| Risk | Demo rejection/prefix review, mark-update domain and acceptance review |
-| Tommy | Next reserved contribution: L-004 pure mark-update transition and focused tests, after reviewed interface handoff |
-| Team room | Exact review/PR integration, canonical scope/status and completion reports |
+| Tommy | Implement/test the one reviewed supplied-fill transition |
+| Engineering | Interface/build setup, mentoring, later scripted composition/report |
+| Research | Literal expected history, interpretation, historical-data requirements |
+| Risk | Contract/failure review, independent reconciliation and timing checks |
+| Team room | Scope/status, exact review handoffs and integration |
 
-Demo acceptance: completed fixed-holding deposits show opening equity16000,
-ending23000, interval deposits7000, profit0, all in minor CU.
-A duplicate event at index2 in four supplied events stops after two accepts.
-Label it INCOMPLETE and label profit as accepted-prefix profit; never imply the
-rejected suffix was processed. Engineering owns the executable/integration
-checks. This is a demonstration of accounting infrastructure, not alpha.
+The senior composition waits for the accepted apprentice function. Research
+and Risk can prepare independent expected results and checks concurrently.
 
-## Agreed next direction: mark updates
+## Working agreements
 
-Research/risk agree; coordinator authorizes engineering to prepare one reviewed
-L-004 interface/harness. It is not yet a released implementation assignment.
+- Mark policy and data interpretation stay separate from accounting.
+  A valuation mark is not an execution guarantee.
+- Existing apprentice `src/` code is preserved; seniors may provide newly
+  authorized scaffolds but do not take over his implementation/tests.
+- Engineering owns small build/tooling/documentation maintenance after
+  milestones. A weekly Friday 10 a.m. maintenance heartbeat is active in this
+  team-room task. It routes useful bounded work to existing specialists and
+  stays quiet without an actionable change. It is not a continuous company loop.
+- Routine reviewed merges remain authorized. No force-push or direct-main edits.
+- Four merged remote Research branches remain undeleted after automatic approval
+  review rejected relayed deletion authority; a direct owner answer is pending.
+  Do not retry through another agent or transport. Unmerged historical reviews
+  remain preserved. This does not block the current milestone.
 
-- A required supplied integer mark is nonnegative, including zero.
-- Validate an already-valuatable current state using the existing L-002 domain.
-  No implicit initialization/reset or repair of missing-mark state.
-- Reuse the shared event sequence: positive and greater than the previous one.
-- Precedence: invalid state, invalid mark, invalid sequence, candidate overflow.
-- Success changes only mark and sequence, preserves cash/quantity/funding, and
-  returns checked equity using L-001. Rejection leaves inputs unchanged.
-- Zero/same mark and zero holdings are valid. Sequence describes supplied order;
-  it establishes no timestamp, price freshness, provenance or execution quality.
-- Engineering owns exact public names/signature and reviewed scaffold.
-  Tommy owns the eventual transition/tests; seniors must not write the solution.
-  One short approach discussion follows the ready handoff.
+## Existing tasks
 
-Business example: cash10000, quantity2, mark3000 means opening equity16000.
-After deposits totaling7000, cash17000 and equity23000. A mark3500 would yield
-equity24000 and profit1000; mark2500 would yield equity22000 and profit-1000.
-Cash stays17000. These are unrealized valuation changes, not cash proceeds.
-
-A small senior-owned deposit/mark/profit composition can follow acceptance.
-A generic mixed-event replay engine is deferred. No second apprentice task.
-
-## Existing team tasks
-
-Host local; each specialist uses its own worktree and feature branch.
+Host local; each specialist uses its own worktree/feature branch.
 
 - Team room: `01a0a692-cdb4-7f20-9fde-95544eaed3a1`
 - Engineering: `01a0a6b7-0c65-7b43-a5e1-d8f0f80cf941`
@@ -83,8 +69,7 @@ Host local; each specialist uses its own worktree and feature branch.
 
 ## Limits
 
-Windows Debug evidence is not exhaustive arithmetic proof, Release/sanitizer
-coverage, alpha, or trading readiness. No withdrawals, trades, parsers, live
-market data, persistence, brokerage access, spending or general framework.
-Earlier [P001 plan](decisions/P001-replay-infrastructure.md) deferred marks;
-this user-requested next-step agreement expands scope only as stated above.
+The evidence is Windows Debug, not exhaustive arithmetic proof, Release or
+sanitizer coverage, alpha, execution realism or trading readiness.
+No purchases, broker access, raw Nasdaq pipeline, generic strategy/event
+framework, borrowing, shorting, optimization or second apprentice task.

@@ -10,7 +10,7 @@ The owner controls scope, spending, external commitments, and eventual deploymen
 
 The existing Jacks conversation is the team room. It can use available Codex task tools to dispatch requests and collect actual specialist responses once the user has created the three tasks or explicitly requested their creation.
 
-Tasks do not automatically share chat history or wake on file changes. No scheduler is installed. A team-room request starts a bounded coordination cycle; report blockers and return rather than claiming perpetual operation.
+Tasks do not automatically share chat history or wake on file changes. A team-room request starts a bounded coordination cycle. A weekly engineering-maintenance heartbeat is configured; it checks for useful build/tooling/documentation work and routes bounded assignments to the existing specialists. It does not make the company continuously active. Report blockers and return when the assignment is complete.
 
 At first registration, discover the three tasks, verify their project and role, and record their actual IDs in company/status.md. Do not invent IDs. If task tools are unavailable, tell the user exactly which handoff needs to be pasted into which task.
 
@@ -51,6 +51,10 @@ A team update answers: What are we investigating? What changed? Why? What is unc
 A review meeting collects actual specialist reviews. Preserve disagreements. Do not roleplay multiple reviewers in one answer and call it independent review.
 
 Explain terms when introduced, maintain project vocabulary as it becomes useful, and distinguish measured results from conjecture. Avoid ritual meetings and status updates with no new information.
+
+## Maintenance and apprentice history
+
+Engineering owns proportionate build, tooling, CI and documentation maintenance as milestones complete. Avoid cosmetic churn and speculative frameworks. The owner explicitly reserves existing apprentice src/ code and tests from senior cleanup; review them without rewriting them. New assignment scaffolds remain authorized when explicitly included in the bounded handoff. Git history is preserved; no rewriting it to conceal mistakes.
 
 ## Completion
 
