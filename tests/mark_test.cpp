@@ -128,6 +128,20 @@ TEST(Mark, MarkLTSequence) {
 	ASSERT_EQ(std::get<jacks::MarkError>(res), jacks::MarkError::invalid_sequence);
 }
 
+TEST(Mark, MarkEqualSequence) {
+	const jacks::DepositState state{
+		/* cash_minor_units */		   298,
+		/* quantity_units */		   102,
+		/* mark_minor_units */ 		   342,
+		/* net_deposits_minor_units */ 580,
+		/* last_sequence */ 		   0
+	};
+	const jacks::MarkUpdate mark_update{518, 0};
+	const auto res = jacks::apply_mark(state, mark_update);
+	ASSERT_TRUE(std::holds_alternative<jacks::MarkError>(res));
+	ASSERT_EQ(std::get<jacks::MarkError>(res), jacks::MarkError::invalid_sequence);
+}
+
 // overflow
 
 TEST(Mark, MarkBoundaryOverflow) {
@@ -280,7 +294,7 @@ TEST(Mark, MarkValidZeroQuantity) {
 	const jacks::DepositState state{
 		/* cash_minor_units */		   44,
 		/* quantity_units */		   0,
-		/* mark_minor_units */ 		   102,
+		/* mark_minor_units */ 		   std::nullopt,
 		/* net_deposits_minor_units */ 50,
 		/* last_sequence */ 		   5
 	};
@@ -295,6 +309,27 @@ TEST(Mark, MarkValidZeroQuantity) {
 	ASSERT_EQ(ma.state.mark_minor_units, 86);
 	ASSERT_EQ(ma.state.net_deposits_minor_units, 50);
 	ASSERT_EQ(ma.state.last_sequence, 9);
+}
+
+TEST(Mark, MarkUnchangedMark) {
+	const jacks::DepositState state{
+		/* cash_minor_units */		   50,
+		/* quantity_units */		   1,
+		/* mark_minor_units */ 		   109,
+		/* net_deposits_minor_units */ 49,
+		/* last_sequence */ 		   6
+	};
+	const jacks::MarkUpdate mark_update{109, 7};
+	const auto res = jacks::apply_mark(state, mark_update);
+	ASSERT_TRUE(std::holds_alternative<jacks::MarkApplied>(res));
+
+	const auto ma = std::get<jacks::MarkApplied>(res);
+	ASSERT_EQ(ma.equity.minor_units, 159);
+	ASSERT_EQ(ma.state.cash_minor_units, 50);
+	ASSERT_EQ(ma.state.quantity_units, 1);
+	ASSERT_EQ(ma.state.mark_minor_units, 109);
+	ASSERT_EQ(ma.state.net_deposits_minor_units, 49);
+	ASSERT_EQ(ma.state.last_sequence, 7);
 }
 
 // unchanged state verification
