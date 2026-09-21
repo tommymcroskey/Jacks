@@ -1,102 +1,110 @@
-# Build and test L-001
+# Build and test Jacks
 
-## L-002 extension
+Engineering owns the build setup. These commands cover the whole project,
+including the current apprentice assignment; there is no new setup per task.
+The historical names `tools/l001.ps1` and `build/l001` remain in use.
 
-The same commands below build and test L-002 as well. Its public API is
-`include/jacks/deposit.hpp`, implementation `src/deposit.cpp`, and tests
-`tests/deposit_test.cpp`. Run configure after pulling the new targets. The helper
-and build directory retain their existing names; there is no second setup to learn.
-With the deposit scaffold, expect **13 existing passes and 1 deposit skip**.
-Tommy owns replacing its throwing stub and skipped placeholder after review.
-The L-001 initial-scaffold description below is historical; L-001 is now implemented.
+## Local Windows quick start
 
-Engineering owns the harness. Tommy owns the valuation test and implementation.
-This scaffold awaits peer review; it supplies neither solution.
+From the repository root in **PowerShell 7**, run:
 
-## Where work goes
-
-```text
-CMakeLists.txt                 build targets and pinned test dependency
-include/jacks/valuation.hpp     shared API: types and function declaration
-src/valuation.cpp              Tommy's implementation (currently throwing stub)
-tests/valuation_test.cpp        Tommy's tests (currently GTEST_SKIP)
-tests/infrastructure_test.cpp   engineering's non-quant smoke check
-tools/l001.ps1                  Windows terminal helper
-docs/build.md                  these instructions
-learning/submissions/L-001/     explanation and red/green record
-build/l001/                    generated files/dependencies; ignored by Git
+```powershell
+./tools/l001.ps1 all
 ```
 
-Callers include the header without needing implementation details. Tests live
-outside `src/` so GoogleTest stays test-only. Generated files go in `build/`
-because they can be recreated and should not enter commits. The learning folder
-points to this shared component; it does not hold duplicate code.
+This configures, builds and tests in order, stopping if a stage fails. To run
+the stages separately:
 
-## Configure, build, test
+```powershell
+./tools/l001.ps1 configure
+./tools/l001.ps1 build
+./tools/l001.ps1 test
+```
 
-At the repository root, paste this into Windows PowerShell or PowerShell 7.
-It uses the already installed Codex runtime; no PowerShell install is required:
+Check each result before continuing. Reconfigure after pulling changes to
+CMake targets or dependencies. Build after editing code or tests; running
+`test` alone does not rebuild executables.
+
+The helper requires the installed Visual Studio 2019 C++ x64 toolchain,
+`vswhere.exe`, and Visual Studio's bundled CMake/CTest. It selects an x64
+Debug build and handles the known inherited `Path`/`PATH` conflict in child
+processes without changing machine settings. Initial configuration fetches
+pinned GoogleTest and needs network access unless the dependency is cached.
+The helper does not install tools. Report missing-tool errors to engineering.
+
+### Starting from Windows PowerShell 5.1
+
+The helper uses PowerShell 7 APIs; do not run it directly under 5.1. On Tommy's
+existing machine, the bundled runtime can launch it:
 
 ```powershell
 $engPwsh = 'C:\Users\18589\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\pwsh.exe'
-& $engPwsh -NoProfile -File ./tools/l001.ps1 configure
-& $engPwsh -NoProfile -File ./tools/l001.ps1 build
-& $engPwsh -NoProfile -File ./tools/l001.ps1 test
+& $engPwsh -NoProfile -File ./tools/l001.ps1 all
 ```
 
-Omit the final action word for all three. The helper requires PowerShell 7;
-running it directly with Windows PowerShell 5.1 is unsupported. The explicit
-runtime invocation above was verified from Windows PowerShell 5.1 on this machine.
-Configure selects installed VS2019 x64
-and downloads pinned GoogleTest the first time (internet access needed). Build
-compiles and links Debug executables. CTest runs GoogleTest cases and reports
-failures. The helper handles this machine's PATH issue without changing machine
-settings. Fix/report a failed command before continuing. No global install needed.
+That runtime path is machine-specific. If it changes, ask engineering to locate
+the installed PowerShell 7 executable; do not assume the path exists elsewhere.
 
-**Initial result: one infrastructure pass, one component skip.** This is not
-valuation correctness. CTest can print aggregate success with skipped tests;
-check individual results. The stub deliberately throws `std::logic_error` on
-every call. Final domain errors use the variant, not that temporary exception.
+## Read the result, not just the success banner
 
-## Fixed interface and first TDD cycle
+- **Passed:** the executed test's assertions succeeded.
+- **Skipped:** a test intentionally did not verify behavior. A new assignment's
+  placeholder is an explicit skip, not evidence that its function works.
+- **Failed:** investigate the failure before submitting or merging.
+- **No tests:** the helper uses `--no-tests=error`; an empty run is a failure.
 
-`jacks::calculate_equity(std::int64_t cash_minor_units, std::int64_t quantity_units,
-std::optional<std::int64_t> mark_minor_units)` returns
-`std::variant<jacks::Equity, jacks::ErrorCode>` (alias `ValuationResult`).
-`Equity::minor_units` stores signed 64-bit money. Error names: `invalid_input`,
-`missing_mark`, `overflow`. The header specifies units and validation precedence.
-These types carry values; the function validates them.
+CTest can print `100% tests passed` while also listing skipped tests. Check the
+individual results and final skipped-test list. Do not report discovered tests
+as executed passes. Old assignment scaffold counts are historical; use the
+output from the exact revision you tested.
 
-Your first missing-mark example is accepted. Replace the skipped placeholder in
-`tests/valuation_test.cpp` with your GoogleTest check. Justify its expectation
-from the contract before coding. `ASSERT_*` stops the current test on failure;
-`EXPECT_*` reports failure and continues. The infrastructure test illustrates
-syntax with an unrelated string, not a valuation example.
+New scaffolds may throw until the apprentice implements them. The assignment's
+public contract specifies the final behavior; the temporary exception is not
+the intended domain-error interface.
 
-1. **Red:** build/run and confirm the intended test fails. Compiler errors are
-   not behavioral evidence; the unimplemented stub's exception is expected until
-   you begin implementing behavior.
-2. **Green:** make the smallest implementation change satisfying the checked contract.
-3. **Refactor:** improve clarity and rerun tests.
+## Where things live
 
-Cover meaningful rejection and overflow boundaries with independently justified
-expected values as work grows. Do not copy implementation calculations into
-expected results. Engineering supports the harness; risk/research review behavior
-and expectations. No further quiz or framework design is needed from you.
+| Location | Responsibility |
+| --- | --- |
+| `CMakeLists.txt` | Explicit library, executable and test targets |
+| `cmake/JacksTesting.cmake` | Pinned GoogleTest and shared test-target setup |
+| `cmake/JacksWarnings.cmake` | Private warning flags for project targets |
+| `include/jacks/` | Public types and function contracts |
+| `src/` | Component implementations; apprentice work remains apprentice-owned |
+| `tests/` | Unit and integration checks, separate from production code |
+| `tests/research/`, `tests/risk/` | Build wiring for independent specialist checks |
+| `examples/` | Small runnable demonstrations |
+| `build/l001/` | Generated files and dependencies, ignored by Git |
+| `learning/assignments/` | Task-specific requirements and ownership |
 
-Dependency: official [GoogleTest v1.14.0](https://github.com/google/googletest/tree/f8d7d77c06936315286eb55f8de22cd23c188571),
-pinned by full commit in CMake; GoogleMock and installation disabled. Its
-[CMake instructions](https://github.com/google/googletest/blob/f8d7d77c06936315286eb55f8de22cd23c188571/googletest/README.md)
-describe the integration. Only this Windows configuration was executed here.
-Record your actual commands and results with your submission.
+GoogleTest v1.14.0 is pinned to commit
+`f8d7d77c06936315286eb55f8de22cd23c188571`; GoogleMock and dependency installation
+are disabled. Do not introduce another test framework or duplicate implementations.
 
-## L-003 scaffold
+## See the components working together
 
-After the reviewed L-003 handoff, the same `tools/l001.ps1` configure/build/test
-commands also cover `jacks_profit` and its separate `jacks_profit_tests` target.
-The historical helper name remains unchanged. Initially the profit test is an
-explicit skip and the function throws: neither counts as checked behavior.
-The accepted valuation/deposit baseline and future replay library do not depend
-on calling that placeholder. Tommy replaces the scaffold after the briefing.
-Engineering's scaffold verification: MSVC x64 Debug, 35 accepted tests passed
-and one profit placeholder skipped. Do not report this as 36 behavior passes.
+After a successful build:
+
+```powershell
+./build/l001/Debug/jacks_account_demo.exe
+```
+
+The [account walkthrough](account-walkthrough.md) explains its complete and
+intentionally incomplete deposit histories. It is a demonstration, not a
+general trading simulator.
+
+## Before submitting
+
+Use the current [assignment](../learning/assignments/) for the behavior to test.
+Write expected values independently of the implementation. A failing behavioral
+test establishes a useful red step; a compilation error alone does not.
+
+Build and run the full suite after changes. Include a brief account of what
+changed, the actual commands/results, and the tested commit (or say the run
+included uncommitted edits). Distinguish passes, failures and skips. A short PR
+description is enough unless the assignment says otherwise; no reconstructed
+commit diary is required.
+
+[GitHub CI](ci.md) also configures/builds/tests, using hosted Windows 2022 and
+Visual Studio 2022 rather than this machine's VS2019 helper. Record which
+environment produced a result; a successful local run is not a hosted-run claim.
