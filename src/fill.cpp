@@ -61,10 +61,13 @@ FillResult apply_fill(
 		}
 	}
 
-
 	const auto gross = fill.quantity_units * fill.price_minor_units;
 
 	if (fill.side == FillSide::sell) {
+		// insufficient cash
+		if (state.cash_minor_units - fill.fee_minor_units < -gross) {
+			return FillError::insufficient_cash;
+		}
 		// final cash overflow
 		if (INT64_MAX - state.cash_minor_units - fill.fee_minor_units
 			< gross) {
@@ -82,7 +85,8 @@ FillResult apply_fill(
 	const DepositState resulting_state{
 		state.cash_minor_units + (fill.side == FillSide::buy ? -gross : gross)
 		- fill.fee_minor_units,
-		state.quantity_units + fill.quantity_units,
+		state.quantity_units + (fill.side == FillSide::buy
+		? fill.quantity_units : -fill.quantity_units),
 		state.mark_minor_units,
 		state.net_deposits_minor_units,
 		fill.sequence
@@ -99,7 +103,6 @@ FillResult apply_fill(
 	}
 
 	return FillApplied{resulting_state, std::get<Equity>(resulting_equity)};
-
 }
 
 } // namespace jacks
