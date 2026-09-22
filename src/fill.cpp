@@ -1,6 +1,7 @@
 #include "jacks/fill.hpp"
 
 #include <stdexcept>
+#include <iostream>
 
 namespace jacks {
 
@@ -68,8 +69,9 @@ FillResult apply_fill(
 		if (state.cash_minor_units - fill.fee_minor_units < -gross) {
 			return FillError::insufficient_cash;
 		}
+
 		// final cash overflow
-		if (INT64_MAX - state.cash_minor_units - fill.fee_minor_units
+		if (INT64_MAX - state.cash_minor_units + fill.fee_minor_units
 			< gross) {
 			return FillError::overflow;
 		}
@@ -83,8 +85,8 @@ FillResult apply_fill(
 	}
 
 	const DepositState resulting_state{
-		state.cash_minor_units + (fill.side == FillSide::buy ? -gross : gross)
-		- fill.fee_minor_units,
+		(state.cash_minor_units - fill.fee_minor_units)
+		+ (fill.side == FillSide::buy ? -gross : gross),
 		state.quantity_units + (fill.side == FillSide::buy
 		? fill.quantity_units : -fill.quantity_units),
 		state.mark_minor_units,
