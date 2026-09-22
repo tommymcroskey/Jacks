@@ -305,3 +305,23 @@ TEST_F(FillTest, FillValidCashPlusGrossExceedsMax) {
 	ASSERT_EQ(ds.last_sequence, 9);
 	ASSERT_EQ(eq.minor_units, INT64_MAX);
 }
+
+TEST_F(FillTest, FillValidSellCashZeroFeeOne) {
+	state.cash_minor_units = 0;
+	state.quantity_units = 1;
+	state.mark_minor_units = 0;
+	fill_sell.quantity_units = 1;
+	fill_sell.price_minor_units = 1;
+	fill_sell.fee_minor_units = 1;
+	const auto res = jacks::apply_fill(state, fill_sell);
+	ASSERT_TRUE(std::holds_alternative<jacks::FillApplied>(res));
+	const auto ds = std::get<jacks::FillApplied>(res).state;
+	const auto eq = std::get<jacks::FillApplied>(res).equity;
+	ASSERT_EQ(ds.cash_minor_units, 0);
+	ASSERT_EQ(ds.quantity_units, 0);
+	ASSERT_NE(ds.mark_minor_units, std::nullopt);
+	ASSERT_EQ(*ds.mark_minor_units, 0);
+	ASSERT_EQ(ds.net_deposits_minor_units, 7000);
+	ASSERT_EQ(ds.last_sequence, 9);
+	ASSERT_EQ(eq.minor_units, 0);
+}
