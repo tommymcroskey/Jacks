@@ -201,6 +201,18 @@ TEST_F(FillTest, FillFinalQuantityOverflow) {
 	ASSERT_EQ(std::get<jacks::FillError>(res), jacks::FillError::overflow);
 }
 
+TEST_F(FillTest, FillCashGrossOverflow) {
+	state.cash_minor_units = INT64_MAX;
+	state.quantity_units = 1;
+	state.mark_minor_units = 0;
+	fill_sell.quantity_units = 1;
+	fill_sell.price_minor_units = 1;
+	fill_sell.fee_minor_units = 1;
+	const auto res = jacks::apply_fill(state, fill_sell);
+	ASSERT_TRUE(std::holds_alternative<jacks::FillError>(res));
+	ASSERT_EQ(std::get<jacks::FillError>(res), jacks::FillError::overflow);
+}
+
 // insufficient_cash
 
 TEST_F(FillTest, FillFinalCashNegativeBuy) {
