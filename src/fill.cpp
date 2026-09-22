@@ -71,8 +71,8 @@ FillResult apply_fill(
 		}
 
 		// final cash overflow
-		if (INT64_MAX - state.cash_minor_units + fill.fee_minor_units
-			< gross) {
+		if (INT64_MAX - state.cash_minor_units
+			< gross - fill.fee_minor_units) {
 			return FillError::overflow;
 		}
 	}
