@@ -4,8 +4,6 @@
 
 namespace jacks {
 
-bool is_valid_fill_side(FillSide);
-
 FillResult apply_fill(
 	const DepositState& state,
 	const Fill& fill) {
@@ -43,19 +41,16 @@ FillResult apply_fill(
 			return FillError::insufficient_quantity;
 		}
 
-		// gross overflow
 		if (INT64_MAX / fill.quantity_units < fill.price_minor_units) {
 			return FillError::overflow;
 		}
 	}
 
 	if (fill.side == FillSide::buy) {
-		// quantity overflow
 		if (INT64_MAX - fill.quantity_units < state.quantity_units) { 
 			return FillError::overflow;
 		}
 
-		// gross overflow
 		if (INT64_MAX / fill.quantity_units < fill.price_minor_units) {
 			return FillError::overflow;
 		}
@@ -64,12 +59,10 @@ FillResult apply_fill(
 	const auto gross = fill.quantity_units * fill.price_minor_units;
 
 	if (fill.side == FillSide::sell) {
-		// insufficient cash
 		if (state.cash_minor_units - fill.fee_minor_units < -gross) {
 			return FillError::insufficient_cash;
 		}
 
-		// final cash overflow
 		if (INT64_MAX - state.cash_minor_units
 			< gross - fill.fee_minor_units) {
 			return FillError::overflow;
@@ -77,7 +70,6 @@ FillResult apply_fill(
 	}
 
 	if (fill.side == FillSide::buy) {
-		// insufficient cash
 		if (state.cash_minor_units - fill.fee_minor_units < gross) {
 			return FillError::insufficient_cash;
 		}
