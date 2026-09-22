@@ -1,7 +1,6 @@
 #include "jacks/fill.hpp"
 
 #include <stdexcept>
-#include <iostream>
 
 namespace jacks {
 
