@@ -38,15 +38,13 @@ FillResult apply_fill(
 
 	if (fill.side == FillSide::sell
 		&& fill.quantity_units > state.quantity_units) {
-			return FillError::insufficient_quantity;
-		}
+		return FillError::insufficient_quantity;
 	}
 
 	if (fill.side == FillSide::buy
 		&& INT64_MAX - fill.quantity_units
 		< state.quantity_units) {
-			return FillError::overflow;
-		}
+		return FillError::overflow;
 	}
 
 	if (INT64_MAX / fill.quantity_units < fill.price_minor_units) {
@@ -68,8 +66,7 @@ FillResult apply_fill(
 
 	if (fill.side == FillSide::buy
 		&& state.cash_minor_units - fill.fee_minor_units < gross) {
-			return FillError::insufficient_cash;
-		}
+		return FillError::insufficient_cash;
 	}
 
 	const DepositState resulting_state{
