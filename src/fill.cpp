@@ -1,7 +1,5 @@
 #include "jacks/fill.hpp"
 
-#include <stdexcept>
-
 namespace jacks {
 
 FillResult apply_fill(
