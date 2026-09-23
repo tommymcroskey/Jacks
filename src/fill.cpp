@@ -36,24 +36,21 @@ FillResult apply_fill(
 		return FillError::missing_mark;
 	}
 
-	if (fill.side == FillSide::sell) {
-		if (fill.quantity_units > state.quantity_units) {
+	if (fill.side == FillSide::sell
+		&& fill.quantity_units > state.quantity_units) {
 			return FillError::insufficient_quantity;
 		}
+	}
 
-		if (INT64_MAX / fill.quantity_units < fill.price_minor_units) {
+	if (fill.side == FillSide::buy
+		&& INT64_MAX - fill.quantity_units
+		< state.quantity_units) {
 			return FillError::overflow;
 		}
 	}
 
-	if (fill.side == FillSide::buy) {
-		if (INT64_MAX - fill.quantity_units < state.quantity_units) { 
-			return FillError::overflow;
-		}
-
-		if (INT64_MAX / fill.quantity_units < fill.price_minor_units) {
-			return FillError::overflow;
-		}
+	if (INT64_MAX / fill.quantity_units < fill.price_minor_units) {
+		return FillError::overflow;
 	}
 
 	const auto gross = fill.quantity_units * fill.price_minor_units;
@@ -69,8 +66,8 @@ FillResult apply_fill(
 		}
 	}
 
-	if (fill.side == FillSide::buy) {
-		if (state.cash_minor_units - fill.fee_minor_units < gross) {
+	if (fill.side == FillSide::buy
+		&& state.cash_minor_units - fill.fee_minor_units < gross) {
 			return FillError::insufficient_cash;
 		}
 	}

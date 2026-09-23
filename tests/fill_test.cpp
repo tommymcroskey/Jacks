@@ -53,7 +53,6 @@ TEST_F(FillTest, FillStateMissingMark) {
 }
 
 TEST_F(FillTest, FillStateOverflow) {
-	// INT64_MAX / 15 * 20 (quantity_units) > INT64_MAX -> overflow
 	state.mark_minor_units = INT64_MAX / 15;
 	const auto res = jacks::apply_fill(state, fill_buy);
 	ASSERT_TRUE(std::holds_alternative<jacks::FillError>(res));
@@ -168,8 +167,6 @@ TEST_F(FillTest, FillSellBoundaryGreaterThanQuantity) {
 	ASSERT_EQ(std::get<jacks::FillError>(res), jacks::FillError::insufficient_quantity);
 }
 
-// include sell inside boundary in valid
-
 // overflow
 
 TEST_F(FillTest, FillGrossOverflow) {
@@ -178,20 +175,12 @@ TEST_F(FillTest, FillGrossOverflow) {
 	fill_sell.quantity_units = 20;
 	fill_sell.price_minor_units = INT64_MAX / 10;
 	fill_sell.fee_minor_units = INT64_MAX;
-	// final quantity 0, final cash INT64_MAX (0 + 2 * INT64_MAX - INT64_MAX),
-	// final equity: INT64_MAX (INT64_MAX + 0 * 1)
-	// therefore, gross overflow isolated in this case
 	const auto res = jacks::apply_fill(state, fill_sell);
 	ASSERT_TRUE(std::holds_alternative<jacks::FillError>(res));
 	ASSERT_EQ(std::get<jacks::FillError>(res), jacks::FillError::overflow);
 }
 
 TEST_F(FillTest, FillFinalQuantityOverflow) {
-	// final quantity = (buy) fill_quantity + state_quantity
-	// 					(sell) fill_quantity - state_quantity
-	// higher precedent test FillSellBoundaryGreater than quantity
-	// already establishes sell operation clamped to zero, so buy
-	// is only concern
 	state.quantity_units = INT64_MAX;
 	state.mark_minor_units = 0;
 	fill_buy.quantity_units = 1;
@@ -204,7 +193,6 @@ TEST_F(FillTest, FillFinalQuantityOverflow) {
 // insufficient_cash
 
 TEST_F(FillTest, FillFinalCashNegativeBuy) {
-	// final cash = (buy) cash - gross - fee
 	state.cash_minor_units = INT64_MAX;
 	state.quantity_units = 0;
 	state.mark_minor_units = 0;
@@ -217,7 +205,6 @@ TEST_F(FillTest, FillFinalCashNegativeBuy) {
 }
 
 TEST_F(FillTest, FillFinalCashNegativeSell) {
-	// final cash = (sell) cash + gross - fee
 	state.cash_minor_units = 0;
 	state.quantity_units = 1;
 	fill_sell.quantity_units = 1;
@@ -231,7 +218,6 @@ TEST_F(FillTest, FillFinalCashNegativeSell) {
 // overflow
 
 TEST_F(FillTest, FillFinalCashOverflow) {
-	// final cash = (sell) cash + gross - fee
 	state.cash_minor_units = INT64_MAX;
 	state.quantity_units = 1;
 	state.mark_minor_units = 0;
@@ -244,7 +230,6 @@ TEST_F(FillTest, FillFinalCashOverflow) {
 }
 
 TEST_F(FillTest, FillCandidateEquityOverflow) {
-	// candidate equity = quantity * mark + cash
 	state.cash_minor_units = INT64_MAX - (INT64_MAX / 10) + 11;
 	state.quantity_units = 0;
 	state.mark_minor_units = INT64_MAX / 10;
