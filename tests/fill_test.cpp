@@ -15,7 +15,7 @@ protected:
 		/* net_deposits_minor_units */ 7000,
 		/* last_sequence */			   6
 	};
-	
+
 	jacks::Fill fill_buy{
 		/* side */ jacks::FillSide::buy,
 		/* quantity_units */	8,
@@ -34,7 +34,8 @@ protected:
 };
 
 // precedence: invalid_state, invalid_fill, invalid_sequence,
-// missing_mark, insufficient_quantity, overflow, insufficient_cash
+// missing_mark, insufficient_quantity, (gross) overflow,
+// insufficient_cash, overflow
 
 // invalid_state
 
