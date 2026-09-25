@@ -53,13 +53,9 @@ void apply_record_event(
 
 	if constexpr (std::is_same_v<Event_T, MarkUpdate>) {
 		event_result = apply_mark(last_state, event); 
-	}
-
-	if constexpr (std::is_same_v<Event_T, Deposit>) {
+	} else if constexpr (std::is_same_v<Event_T, Deposit>) {
 		event_result = apply_deposit(last_state,event); 
-	}
-
-	if constexpr (std::is_same_v<Event_T, Fill>) {
+	} else if constexpr (std::is_same_v<Event_T, Fill>) {
 		event_result = apply_fill(last_state, event);
 	}
 
@@ -97,37 +93,37 @@ AccountReplayResult replay_account(
 	AccountReplayReport res;
 	res.opening_state = opening_state;
 	res.opening_equity = std::get<Equity>(opening_valuation_result);
+	if (events.empty()) {
+		res.final_state = opening_state;
+		res.final_equity = std::get<Equity>(opening_valuation_result);
+		return res;
+	}
 
 	size_t idx{0};
 	DepositState last_state{opening_state};
 	for (auto& event : events) {
-		if (std::holds_alternative<MarkUpdate>(event)) {
-			apply_record_event<MarkUpdate, MarkResult, MarkApplied, MarkError>(
-				res,
-				last_state,
-				std::get<MarkUpdate>(event),
-				idx);
-			if (res.failure != std::nullopt) {
-				return res;
+		std::visit([&](const auto& concrete_event) {
+			using T = std::decay_t<decltype(concrete_event)>;
+
+			if constexpr (std::is_same_v<T, MarkUpdate>) {
+				apply_record_event<
+					MarkUpdate, MarkResult, MarkApplied, MarkError>(
+						res, last_state, concrete_event, idx);
+
+			} else if constexpr (std::is_same_v<T, Fill>) {
+				apply_record_event<
+					Fill, FillResult, FillApplied, FillError>(
+						res, last_state, concrete_event, idx);
+
+			} else if constexpr (std::is_same_v<T, Deposit>) {
+				apply_record_event<
+					Deposit, DepositResult, DepositApplied, DepositError>(
+						res, last_state, concrete_event, idx);
 			}
-		} else if (std::holds_alternative<Fill>(event)) {
-			apply_record_event<Fill, FillResult, FillApplied, FillError>(
-				res,
-				last_state,
-				std::get<Fill>(event),
-				idx);
-			if (res.failure != std::nullopt) {
-				return res;
-			}
-		} else {
-			apply_record_event<Deposit, DepositResult, DepositApplied, DepositError>(
-				res,
-				last_state,
-				std::get<Deposit>(event),
-				idx);
-			if (res.failure != std::nullopt) {
-				return res;
-			}
+		}, event);
+
+		if (res.failure) {
+			return res;
 		}
 
 		idx++;
