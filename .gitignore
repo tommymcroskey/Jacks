@@ -12,6 +12,14 @@ out/
 .venv/
 __pycache__/
 
+# Vim swap, persistent undo, and backup files
+.*.swp
+.*.un~
+*.cpp~
+
+# CTest output generated from the repository root
+/Testing/
+
 # Raw datasets and generated bulk output: track manifests/small fixtures separately
 data/raw/
 data/cache/
