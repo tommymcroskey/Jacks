@@ -1,7 +1,6 @@
 #include "jacks/account_replay.hpp"
 
 #include <type_traits>
-#include <iostream>
 
 namespace jacks {
 
@@ -68,7 +67,6 @@ void apply_record_event(
 	}
 
 	auto event_applied = std::get<Event_Applied_T>(event_result);
-	std::cout << event_applied.state.cash_minor_units << std::endl;
 	last_state = event_applied.state;
 
 	report.accepted.push_back(AccountReplayStep{idx, event_applied});
