@@ -72,6 +72,21 @@ TEST_F(AccountReplayTest, InvalidFill) {
 	ASSERT_EQ(std::get<jacks::FillError>(error), jacks::FillError::insufficient_cash);
 }
 
+TEST_F(AccountReplayTest, InvalidPrefixValidSuffix) {
+	state.quantity_units = 1;
+	events.push_back(jacks::MarkUpdate{INT64_MAX, 5});
+	events.push_back(jacks::MarkUpdate{56, 6});
+
+	const auto res = jacks::replay_account(state, events);
+
+	ASSERT_TRUE(std::holds_alternative<jacks::AccountReplayReport>(res));
+	const auto report = std::get<jacks::AccountReplayReport>(res);
+	ASSERT_NE(report.failure, std::nullopt);
+	const auto failure = *report.failure;
+	ASSERT_TRUE(std::holds_alternative<jacks::MarkError>(failure.error));
+	ASSERT_EQ(std::get<jacks::MarkError>(failure.error), jacks::MarkError::overflow);
+}
+
 TEST_F(AccountReplayTest, BasicValid) {
 	events.push_back(jacks::Fill{
 		jacks::FillSide::buy,
@@ -85,6 +100,9 @@ TEST_F(AccountReplayTest, BasicValid) {
 	events.push_back(jacks::MarkUpdate{13, 4});
 	events.push_back(jacks::MarkUpdate{14, 5});
 	events.push_back(jacks::MarkUpdate{15, 6});
+
+	const jacks::DepositState state_cpy(state);
+	const std::vector<jacks::AccountEvent> events_cpy(events);
 
 	const auto res = jacks::replay_account(state, events);
 
@@ -105,6 +123,16 @@ TEST_F(AccountReplayTest, BasicValid) {
 	ASSERT_EQ(report.final_state.net_deposits_minor_units, 0);
 	ASSERT_EQ(report.final_state.last_sequence, 6);
 	ASSERT_EQ(report.final_equity.minor_units, 1500);
+
+	ASSERT_EQ(state_cpy.cash_minor_units, state.cash_minor_units);
+	ASSERT_EQ(state_cpy.quantity_units, state.quantity_units);
+	ASSERT_NE(state_cpy.mark_minor_units, std::nullopt);
+	ASSERT_NE(state.mark_minor_units, std::nullopt);
+	ASSERT_EQ(*state_cpy.mark_minor_units, *state.mark_minor_units);
+	ASSERT_EQ(state_cpy.net_deposits_minor_units, state.net_deposits_minor_units);
+	ASSERT_EQ(state_cpy.last_sequence, state.last_sequence);
+
+	ASSERT_EQ(events_cpy.size(), events.size());
 }
 
 TEST_F(AccountReplayTest, BasicValidFillMarkDeposit) {
@@ -141,4 +169,22 @@ TEST_F(AccountReplayTest, BasicValidFillMarkDeposit) {
 	ASSERT_EQ(report.final_state.net_deposits_minor_units, 1000);
 	ASSERT_EQ(report.final_state.last_sequence, 7);
 	ASSERT_EQ(report.final_equity.minor_units, 2500);
+}
+
+TEST_F(AccountReplayTest, ValidEmptyEvents) {
+	const auto res = jacks::replay_account(state, events);
+
+	ASSERT_TRUE(std::holds_alternative<jacks::AccountReplayReport>(res));
+	const auto report = std::get<jacks::AccountReplayReport>(res);
+	ASSERT_EQ(report.opening_state.cash_minor_units, report.final_state.cash_minor_units);
+	ASSERT_EQ(report.opening_state.quantity_units, report.final_state.quantity_units);
+	ASSERT_NE(report.opening_state.mark_minor_units, std::nullopt);
+	ASSERT_NE(report.final_state.mark_minor_units, std::nullopt);
+	ASSERT_EQ(*report.opening_state.mark_minor_units, *report.final_state.mark_minor_units);
+	ASSERT_EQ(report.opening_state.net_deposits_minor_units,
+			  report.final_state.net_deposits_minor_units);
+	ASSERT_EQ(report.opening_state.net_deposits_minor_units, 0);
+	ASSERT_EQ(report.opening_state.last_sequence, report.final_state.last_sequence);
+	ASSERT_EQ(report.opening_state.last_sequence, 0);
+	ASSERT_EQ(report.opening_equity.minor_units, report.final_equity.minor_units);
 }
