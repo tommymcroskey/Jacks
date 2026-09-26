@@ -311,3 +311,23 @@ TEST_F(FillTest, FillValidSellCashZeroFeeOne) {
 	ASSERT_EQ(ds.last_sequence, 9);
 	ASSERT_EQ(eq.minor_units, 0);
 }
+
+TEST_F(FillTest, FillValidFillToZeroCash) {
+	state.cash_minor_units = 1000;
+	state.quantity_units = 0;
+	state.mark_minor_units = 10;
+	fill_buy.quantity_units = 100;
+	fill_buy.price_minor_units = 10;
+	fill_buy.fee_minor_units = 0;
+	const auto res = jacks::apply_fill(state, fill_buy);
+	ASSERT_TRUE(std::holds_alternative<jacks::FillApplied>(res));
+	const auto ds = std::get<jacks::FillApplied>(res).state;
+	const auto eq = std::get<jacks::FillApplied>(res).equity;
+	ASSERT_EQ(ds.cash_minor_units, 0);
+	ASSERT_EQ(ds.quantity_units, 100);
+	ASSERT_NE(ds.mark_minor_units, std::nullopt);
+	ASSERT_EQ(*ds.mark_minor_units, 10);
+	ASSERT_EQ(ds.net_deposits_minor_units, 7000);
+	ASSERT_EQ(ds.last_sequence, 8);
+	ASSERT_EQ(eq.minor_units, 1000);
+}

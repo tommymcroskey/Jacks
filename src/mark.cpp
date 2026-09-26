@@ -1,7 +1,5 @@
 #include "jacks/mark.hpp"
 
-#include <stdexcept>
-
 namespace jacks {
 
 MarkResult apply_mark(
