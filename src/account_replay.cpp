@@ -72,6 +72,21 @@ void apply_record_event(
 	report.accepted.push_back(AccountReplayStep{idx, event_applied});
 }
 
+void record_final_state_equity(AccountReplayReport& report) {
+
+	if (report.accepted.empty()) {
+		report.final_state = report.opening_state;
+		report.final_equity = report.opening_equity;
+		return;
+	}
+
+	const auto last_step_applied = report.accepted.back().applied;
+	std::visit([&report](const auto& applied) {
+		report.final_state = applied.state;
+		report.final_equity = applied.equity;
+	}, last_step_applied);
+}
+
 AccountReplayResult replay_account(
 	const DepositState& opening_state,
 	const std::vector<AccountEvent>& events) {
@@ -92,8 +107,8 @@ AccountReplayResult replay_account(
 	res.opening_state = opening_state;
 	res.opening_equity = std::get<Equity>(opening_valuation_result);
 	if (events.empty()) {
-		res.final_state = opening_state;
-		res.final_equity = std::get<Equity>(opening_valuation_result);
+		res.final_state = res.opening_state;
+		res.final_equity = res.opening_equity;
 		return res;
 	}
 
@@ -121,17 +136,14 @@ AccountReplayResult replay_account(
 		}, event);
 
 		if (res.failure) {
+			record_final_state_equity(res);
 			return res;
 		}
 
 		idx++;
 	}
 
-	const auto last_step_applied = res.accepted.back().applied;
-	std::visit([&res](const auto& applied) {
-		res.final_state = applied.state;
-		res.final_equity = applied.equity;
-	}, last_step_applied);
+	record_final_state_equity(res);
 
 	return res;
 }
