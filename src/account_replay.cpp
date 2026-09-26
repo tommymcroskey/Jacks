@@ -51,9 +51,9 @@ void apply_record_event(
 	Event_Result_T event_result;
 
 	if constexpr (std::is_same_v<Event_T, MarkUpdate>) {
-		event_result = apply_mark(last_state, event); 
+		event_result = apply_mark(last_state, event);
 	} else if constexpr (std::is_same_v<Event_T, Deposit>) {
-		event_result = apply_deposit(last_state,event); 
+		event_result = apply_deposit(last_state,event);
 	} else if constexpr (std::is_same_v<Event_T, Fill>) {
 		event_result = apply_fill(last_state, event);
 	}
