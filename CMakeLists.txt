@@ -42,6 +42,10 @@ add_executable(jacks_trading_demo examples/trading_demo.cpp)
 target_link_libraries(jacks_trading_demo PRIVATE jacks_deposit jacks_fill jacks_mark jacks_profit)
 jacks_enable_warnings(jacks_trading_demo)
 
+add_library(jacks_itch STATIC src/itch_add_order.cpp)
+target_include_directories(jacks_itch PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+jacks_enable_warnings(jacks_itch)
+
 include(CTest)
 if(BUILD_TESTING)
   include(cmake/JacksTesting.cmake)
@@ -59,6 +63,8 @@ if(BUILD_TESTING)
     SOURCES tests/account_replay_test.cpp LIBRARIES jacks_account_replay)
   jacks_add_tests(jacks_replay_profit_tests
     SOURCES tests/replay_profit_test.cpp LIBRARIES jacks_replay jacks_profit)
+  jacks_add_tests(jacks_itch_tests
+    SOURCES tests/itch_add_order_test.cpp LIBRARIES jacks_itch)
   add_test(NAME AccountDemo.Runs COMMAND jacks_account_demo)
   add_test(NAME TradingDemo.Reconciles COMMAND jacks_trading_demo)
 endif()
