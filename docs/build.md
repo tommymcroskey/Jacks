@@ -93,6 +93,16 @@ The [account walkthrough](account-walkthrough.md) explains its complete and
 intentionally incomplete deposit histories. It is a demonstration, not a
 general trading simulator.
 
+For the synthetic deposit, buy, mark update, and sell example:
+
+```powershell
+./build/l001/Debug/jacks_trading_demo.exe
+```
+
+The [trading walkthrough](trading-walkthrough.md) explains the supplied prices,
+fees, account values, and profit. This uses predetermined synthetic events and
+explicit accounting calls; it does not simulate a strategy or market execution.
+
 ## Before submitting
 
 Use the current [assignment](../learning/assignments/) for the behavior to test.
