@@ -58,7 +58,6 @@ if(BUILD_TESTING)
   jacks_add_tests(jacks_profit_tests SOURCES tests/profit_test.cpp LIBRARIES jacks_profit)
   jacks_add_tests(jacks_mark_tests SOURCES tests/mark_test.cpp LIBRARIES jacks_mark)
   jacks_add_tests(jacks_fill_tests SOURCES tests/fill_test.cpp LIBRARIES jacks_fill)
-  # Mixed account replay remains apprentice-owned; its placeholder is an explicit skip.
   jacks_add_tests(jacks_account_replay_tests
     SOURCES tests/account_replay_test.cpp LIBRARIES jacks_account_replay)
   jacks_add_tests(jacks_replay_profit_tests
